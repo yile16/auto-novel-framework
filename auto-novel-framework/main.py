@@ -102,14 +102,43 @@ def main():
     )
     dec_parser.set_defaults(func=cmd_decompose)
 
+    # web command
+    web_parser = subparsers.add_parser(
+        "web",
+        help="Launch the interactive web UI",
+    )
+    web_parser.add_argument(
+        "--host", default="0.0.0.0",
+        help="Host to bind (default: 0.0.0.0)",
+    )
+    web_parser.add_argument(
+        "--port", "-p", type=int, default=8765,
+        help="Port to bind (default: 8765)",
+    )
+    web_parser.set_defaults(func=cmd_web)
+
     args = parser.parse_args()
 
     if args.command is None:
         parser.print_help()
         sys.exit(1)
 
-    setup_logging(args.verbose)
+    if args.command == "web":
+        setup_logging(True)
+    else:
+        setup_logging(args.verbose)
     args.func(args)
+
+
+def cmd_web(args):
+    """Launch the interactive web interface."""
+    from web.server import serve
+    console = Console()
+    console.print(f"\n[bold]Auto-Novel Framework Web UI[/]")
+    console.print(f"  Local:   [cyan]http://localhost:{args.port}[/]")
+    console.print(f"  Network: [cyan]http://0.0.0.0:{args.port}[/]")
+    console.print(f"\n  Press [bold]Ctrl+C[/] to stop\n")
+    serve(host=args.host, port=args.port)
 
 
 if __name__ == "__main__":

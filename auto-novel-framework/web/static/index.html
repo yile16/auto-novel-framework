@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auto-Novel Framework — 小说逆向拆解</title>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<style>
+:root {
+    --bg-deep:#08090d;--bg-surface:#0f1117;--bg-card:#161822;--bg-elevated:#1e2030;
+    --border:#252840;--text-primary:#e4e2f0;--text-secondary:#9492a8;--text-muted:#5c5a6e;
+    --amber:#e8a838;--emerald:#34d399;--rose:#f06070;--sky:#38bdf8;--violet:#a78bfa;
+    --radius-sm:6px;--radius-md:10px;--radius-lg:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans SC',sans-serif;background:var(--bg-deep);color:var(--text-primary);min-height:100vh;line-height:1.7}
+.app{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+.header{text-align:center;margin-bottom:40px}
+.header h1{font-family:'Noto Serif SC',serif;font-size:2.2rem;font-weight:900;background:linear-gradient(135deg,var(--text-primary) 30%,var(--amber) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px}
+.header p{color:var(--text-muted);font-size:.9rem}
+
+/* Upload */
+.upload-zone{border:2px dashed var(--border);border-radius:var(--radius-lg);padding:36px;text-align:center;cursor:pointer;transition:all .3s;background:var(--bg-surface)}
+.upload-zone:hover{border-color:var(--amber)}
+.upload-zone .icon{font-size:2.2rem;color:var(--text-muted);margin-bottom:10px}
+.upload-zone h3{font-family:'Noto Serif SC',serif;font-size:1.1rem;margin-bottom:4px}
+.upload-zone .hint{color:var(--text-muted);font-size:.82rem}
+.upload-zone .tags{display:flex;gap:6px;justify-content:center;margin-top:12px}
+.upload-zone .tag{padding:3px 10px;border-radius:16px;background:var(--bg-elevated);color:var(--text-muted);font-size:.72rem;border:1px solid var(--border)}
+#fileInput{display:none}
+.file-info{display:none;margin-top:16px;padding:14px 18px;background:var(--bg-card);border-radius:var(--radius-md);border:1px solid var(--border);align-items:center;gap:12px}
+.file-info.show{display:flex}
+.file-info .fi-icon{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--amber),#c48e2e);display:flex;align-items:center;justify-content:center;color:var(--bg-deep);flex-shrink:0}
+.file-info .fi-detail{flex:1}
+.file-info .fi-name{font-weight:600;font-size:.9rem}
+.file-info .fi-meta{color:var(--text-muted);font-size:.78rem;margin-top:2px}
+.file-info .fi-remove{width:32px;height:32px;border-radius:50%;border:none;background:var(--bg-elevated);color:var(--text-secondary);cursor:pointer;transition:all .2s}
+.file-info .fi-remove:hover{background:var(--rose);color:#fff}
+
+/* Config */
+.config-section{margin-top:18px;display:none}
+.config-section.show{display:block}
+.config-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.config-row input, .config-row select{flex:1;min-width:140px;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);font-size:.88rem;font-family:'Noto Sans SC',sans-serif;outline:none;transition:border-color .2s}
+.config-row input:focus, .config-row select:focus{border-color:var(--amber)}
+.config-row input::placeholder{color:var(--text-muted)}
+.provider-chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{padding:7px 14px;border-radius:20px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-secondary);font-size:.82rem;cursor:pointer;transition:all .2s;user-select:none}
+.chip:hover{border-color:var(--amber-dim)}
+.chip.active{border-color:var(--amber);background:rgba(232,168,56,.08);color:var(--amber)}
+
+/* Slider */
+.slider-wrap{display:flex;align-items:center;gap:12px;margin-top:10px}
+.slider-wrap label{color:var(--text-secondary);font-size:.85rem;white-space:nowrap}
+.slider-wrap input[type=range]{flex:1;-webkit-appearance:none;height:4px;border-radius:2px;background:var(--bg-elevated);outline:none}
+.slider-wrap input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--amber);cursor:pointer}
+.slider-val{min-width:44px;text-align:center;color:var(--amber);font-weight:600;font-size:.85rem}
+
+/* Buttons */
+.btn-row{display:flex;gap:10px;margin-top:16px;align-items:center}
+.btn{padding:10px 24px;border-radius:var(--radius-md);border:none;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Noto Sans SC',sans-serif}
+.btn-primary{background:linear-gradient(135deg,var(--amber),#c48e2e);color:var(--bg-deep)}
+.btn-primary:hover{box-shadow:0 4px 16px rgba(232,168,56,.3)}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed}
+.btn-secondary{background:var(--bg-elevated);color:var(--text-secondary);border:1px solid var(--border)}
+.btn-secondary:hover{border-color:var(--text-muted)}
+.btn-danger{background:transparent;color:var(--rose);border:1px solid var(--rose)}
+.btn-danger:hover{background:var(--rose);color:#fff}
+
+/* Progress */
+.progress-section{display:none;margin-top:24px}
+.progress-section.show{display:block}
+.progress-card{background:var(--bg-card);border-radius:var(--radius-lg);padding:20px 24px;border:1px solid var(--border)}
+.progress-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.progress-title{font-weight:600;display:flex;align-items:center;gap:8px}
+.progress-badges{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.p-badge{padding:4px 10px;border-radius:12px;background:var(--bg-elevated);color:var(--text-secondary);font-size:.78rem}
+.bar-track{height:6px;border-radius:3px;background:var(--bg-elevated);overflow:hidden;margin-bottom:12px}
+.bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--amber),var(--sky));transition:width .3s;width:0%}
+.mod-panels{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.mod-panel{padding:12px;border-radius:var(--radius-sm);background:var(--bg-elevated);text-align:center;font-size:.8rem;color:var(--text-muted);transition:all .3s}
+.mod-panel.active{color:var(--amber);border:1px solid var(--amber)}
+.mod-panel.done{color:var(--emerald);border:1px solid var(--emerald)}
+.mod-icon{font-size:1.2rem;margin-bottom:4px}
+
+/* Live Preview */
+.preview{display:none;margin-top:16px;background:var(--bg-card);border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden}
+.preview.show{display:block}
+.pv-head{padding:10px 16px;background:var(--bg-elevated);display:flex;align-items:center;gap:8px;font-size:.85rem}
+.pv-body{padding:16px;max-height:400px;overflow-y:auto}
+.pv-body pre{background:var(--bg-elevated);padding:12px;border-radius:var(--radius-sm);overflow-x:auto;font-size:.8rem}
+.pv-body table{border-collapse:collapse;width:100%;font-size:.82rem}
+.pv-body td,.pv-body th{border:1px solid var(--border);padding:6px 10px;text-align:left}
+.pv-body th{background:var(--bg-elevated)}
+.pv-body h1,.pv-body h2,.pv-body h3{color:var(--amber);margin:16px 0 8px}
+.pv-body h1{font-size:1.3rem}.pv-body h2{font-size:1.1rem}.pv-body h3{font-size:1rem}
+
+/* Results */
+.results{display:none;margin-top:24px}
+.results.show{display:block}
+.results-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.tabs{display:flex;gap:4px;flex-wrap:wrap}
+.tab{padding:8px 16px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg-card);color:var(--text-secondary);cursor:pointer;font-size:.82rem;transition:all .2s}
+.tab.active{border-color:var(--amber);color:var(--amber);background:rgba(232,168,56,.06)}
+.tab-content{display:none;background:var(--bg-card);border-radius:var(--radius-lg);padding:20px;border:1px solid var(--border);max-height:70vh;overflow-y:auto}
+.tab-content.active{display:block}
+
+.toast{position:fixed;top:20px;right:20px;z-index:100;padding:12px 20px;border-radius:var(--radius-md);color:#fff;font-size:.85rem;animation:fadeIn .3s;max-width:360px}
+.toast.success{background:var(--emerald)}.toast.error{background:var(--rose)}.toast.info{background:var(--sky)}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+.spin{animation:spin 1s linear infinite}@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="app">
+    <header class="header">
+        <h1>小说逆向拆解框架</h1>
+        <p>上传 TXT/EPUB → 智能分块 → 多维度并行提取 → 完整逆向工程数据库</p>
+    </header>
+
+    <section class="upload-zone" id="uploadZone">
+        <div class="icon">☁️</div>
+        <h3>点击或拖拽上传小说文件</h3>
+        <p class="hint">支持 .txt / .epub，自动分章</p>
+        <div class="tags"><span class="tag">TXT</span><span class="tag">EPUB</span><span class="tag">10 维提取</span><span class="tag">上下文接力</span></div>
+    </section>
+    <input type="file" id="fileInput" accept=".txt,.epub">
+
+    <div class="file-info" id="fileInfo">
+        <div class="fi-icon">📄</div>
+        <div class="fi-detail">
+            <div class="fi-name" id="fileName"></div>
+            <div class="fi-meta" id="fileMeta"></div>
+        </div>
+        <button class="fi-remove" id="fileRemove">✕</button>
+    </div>
+
+    <section class="config-section" id="configSection">
+        <div class="provider-chips" id="providerChips">
+            <span class="chip active" data-p="deepseek">DeepSeek</span>
+            <span class="chip" data-p="openai">OpenAI</span>
+            <span class="chip" data-p="claude">Claude</span>
+            <span class="chip" data-p="custom">自定义</span>
+        </div>
+        <div class="config-row" style="margin-top:10px">
+            <input type="password" id="apiKey" placeholder="API Key（仅本地使用）">
+            <input type="text" id="baseUrl" placeholder="API 地址" value="https://api.deepseek.com">
+            <input type="text" id="modelName" placeholder="模型名" value="deepseek-chat">
+        </div>
+        <div class="slider-wrap">
+            <label>每批章节数</label>
+            <input type="range" id="chunkSlider" min="5" max="100" value="20" step="5">
+            <span class="slider-val" id="chunkVal">20 章</span>
+        </div>
+        <div class="btn-row">
+            <button class="btn btn-primary" id="startBtn">开始逆向拆解</button>
+            <button class="btn btn-secondary" id="pauseBtn" disabled>暂停</button>
+            <button class="btn btn-danger" id="stopBtn" disabled>终止</button>
+        </div>
+    </section>
+
+    <section class="progress-section" id="progressSection">
+        <div class="progress-card">
+            <div class="progress-head">
+                <span class="progress-title" id="pTitle">⏳ 准备中...</span>
+                <div class="progress-badges">
+                    <span class="p-badge" id="pPercent">0%</span>
+                    <span class="p-badge" id="pMsg">等待启动</span>
+                </div>
+            </div>
+            <div class="bar-track"><div class="bar-fill" id="pBar"></div></div>
+            <div class="mod-panels" id="modPanels">
+                <div class="mod-panel" id="mp-extract"><div class="mod-icon">🔍</div>章节提取</div>
+                <div class="mod-panel" id="mp-merge"><div class="mod-icon">🔗</div>弧段合并</div>
+                <div class="mod-panel" id="mp-finalize"><div class="mod-icon">📋</div>全书定稿</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="preview" id="preview">
+        <div class="pv-head"><span id="pvLabel">实时预览</span></div>
+        <div class="pv-body" id="pvBody"></div>
+    </section>
+
+    <section class="results" id="resultsSection">
+        <div class="results-head">
+            <h2 style="color:var(--amber)">📊 逆向工程数据库</h2>
+            <div style="display:flex;gap:8px">
+                <button class="btn btn-primary" id="dlBtn">下载报告</button>
+                <button class="btn btn-secondary" id="resetBtn">重新开始</button>
+            </div>
+        </div>
+        <div class="tabs" id="tabs">
+            <span class="tab active" data-t="full">完整报告</span>
+            <span class="tab" data-t="chars">角色谱</span>
+            <span class="tab" data-t="plot">情节谱</span>
+            <span class="tab" data-t="world">世界观</span>
+            <span class="tab" data-t="relation">关系网</span>
+        </div>
+        <div class="tab-content active" id="tabContent"></div>
+    </section>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+let state={file:null,text:'',title:'',taskId:null,ws:null,report:'',results:null};
+
+marked.setOptions({breaks:true,gfm:true});
+
+// Provider presets
+const providers={
+    deepseek:{url:'https://api.deepseek.com',model:'deepseek-chat'},
+    openai:{url:'https://api.openai.com/v1',model:'gpt-4o-mini'},
+    claude:{url:'https://api.anthropic.com',model:'claude-sonnet-4-20250514'},
+    custom:{url:'',model:''}
+};
+
+// Upload
+$('uploadZone').onclick=()=>$('fileInput').click();
+$('uploadZone').ondragover=e=>{e.preventDefault();$('uploadZone').style.borderColor='var(--amber)'};
+$('uploadZone').ondragleave=()=>$('uploadZone').style.borderColor='var(--border)'};
+$('uploadZone').ondrop=e=>{e.preventDefault();$('uploadZone').style.borderColor='var(--border)';loadFile(e.dataTransfer.files[0])};
+$('fileInput').onchange=e=>{if(e.target.files[0])loadFile(e.target.files[0])};
+$('fileRemove').onclick=()=>{state.file=null;state.text='';state.title='';$('fileInfo').classList.remove('show');$('configSection').classList.remove('show');$('fileInput').value=''};
+
+$('chunkSlider').oninput=function(){$('chunkVal').textContent=this.value+' 章'};
+
+// Provider chips
+document.querySelectorAll('#providerChips .chip').forEach(c=>c.onclick=()=>{
+    document.querySelectorAll('#providerChips .chip').forEach(x=>x.classList.remove('active'));
+    c.classList.add('active');
+    const p=providers[c.dataset.p];
+    $('baseUrl').value=p.url;$('modelName').value=p.model;
+});
+
+// Actions
+$('startBtn').onclick=run;$('pauseBtn').onclick=pause;$('stopBtn').onclick=stop;
+$('resetBtn').onclick=reset;$('dlBtn').onclick=download;
+
+async function loadFile(file){
+    const form=new FormData();form.append('file',file);
+    $('fileName').textContent=file.name;$('fileMeta').textContent='上传中...';
+    $('fileInfo').classList.add('show');
+    const res=await fetch('/api/upload',{method:'POST',body:form}).then(r=>r.json());
+    if(!res.ok){toast(res.error,'error');return}
+    state.file=file;state.text=res.text;state.title=res.title||file.name.replace(/\.(txt|epub)$/i,'');
+    $('fileMeta').textContent=`${(file.size/1024).toFixed(1)} KB · ${(res.text_length/10000).toFixed(1)} 万字`;
+    $('configSection').classList.add('show');
+    toast('文件加载成功','success');
+}
+
+async function run(){
+    if(!state.text){toast('请先上传小说','error');return}
+    const key=$('apiKey').value.trim();if(!key){toast('请输入 API Key','error');return}
+
+    $('startBtn').disabled=true;$('pauseBtn').disabled=false;$('stopBtn').disabled=false;
+    $('progressSection').classList.add('show');$('preview').classList.add('show');
+    $('resultsSection').classList.remove('show');
+    $('pBar').style.width='0%';$('pPercent').textContent='0%';$('pvBody').innerHTML='';
+    ['mp-extract','mp-merge','mp-finalize'].forEach(id=>$(id).className='mod-panel');
+
+    const form=new FormData();
+    form.append('text',state.text);form.append('title',state.title);
+    form.append('api_key',key);form.append('base_url',$('baseUrl').value.trim());
+    form.append('model',$('modelName').value.trim());
+    form.append('chapters_per_chunk',$('chunkSlider').value);
+
+    const res=await fetch('/api/run',{method:'POST',body:form}).then(r=>r.json());
+    if(!res.ok){toast(res.error,'error');return}
+    state.taskId=res.task_id;
+    connectWS(res.task_id);
+}
+
+function connectWS(taskId){
+    const proto=location.protocol==='https:'?'wss':'ws';
+    const ws=new WebSocket(`${proto}://${location.host}/ws/${taskId}`);
+    state.ws=ws;
+    ws.onmessage=e=>{
+        const msg=JSON.parse(e.data);
+        switch(msg.type){
+            case 'status':
+                $('pBar').style.width=msg.progress+'%';
+                $('pPercent').textContent=msg.progress+'%';
+                $('pMsg').textContent=msg.message;
+                $('pvLabel').textContent=msg.message;
+                if(msg.status==='extracting'){$('mp-extract').className='mod-panel active'}
+                else if(msg.status==='merging'){$('mp-extract').className='mod-panel done';$('mp-merge').className='mod-panel active'}
+                else if(msg.status==='finalizing'){$('mp-merge').className='mod-panel done';$('mp-finalize').className='mod-panel active'}
+                break;
+            case 'completed':
+                state.report=msg.report||'';
+                $('pBar').style.width='100%';$('pPercent').textContent='100%';
+                $('mp-extract').className='mod-panel done';$('mp-merge').className='mod-panel done';
+                $('mp-finalize').className='mod-panel done';
+                $('pvBody').innerHTML=marked.parse(state.report);
+                showResults();
+                $('startBtn').disabled=false;$('pauseBtn').disabled=true;$('stopBtn').disabled=true;
+                toast('拆解完成！','success');
+                ws.close();
+                break;
+            case 'paused':$('pTitle').textContent='⏸️ 已暂停';break;
+            case 'stopped':$('pTitle').textContent='⏹️ 已终止';toast('已终止','info');break;
+            case 'error':$('pTitle').textContent='❌ 出错';toast(msg.message,'error');break;
+        }
+    };
+    ws.onclose=()=>{state.ws=null};
+    ws.onerror=()=>{toast('WebSocket 连接失败','error')};
+}
+
+function pause(){
+    if(!state.taskId)return;
+    fetch(`/api/pause/${state.taskId}`,{method:'POST'});
+    const btn=$('pauseBtn');
+    btn.textContent=btn.textContent==='暂停'?'继续':'暂停';
+}
+
+function stop(){
+    if(!state.taskId)return;
+    fetch(`/api/stop/${state.taskId}`,{method:'POST'});
+    $('startBtn').disabled=false;$('pauseBtn').disabled=true;$('stopBtn').disabled=true;
+}
+
+function showResults(){
+    $('resultsSection').classList.add('show');
+    $('tabContent').innerHTML=marked.parse(state.report);
+    $('preview').classList.remove('show');
+    $('progressSection').classList.remove('show');
+}
+
+function reset(){
+    state.taskId=null;state.report='';state.results=null;
+    if(state.ws){state.ws.close();state.ws=null}
+    $('startBtn').disabled=false;$('pauseBtn').disabled=true;$('stopBtn').disabled=true;
+    $('progressSection').classList.remove('show');$('preview').classList.remove('show');
+    $('resultsSection').classList.remove('show');
+}
+
+function download(){
+    if(state.taskId){
+        fetch(`/api/report/${state.taskId}`).then(r=>r.json()).then(d=>{
+            if(d.ok)downloadText(d.report,state.title+'_逆向工程数据库.md');
+        });
+    }else if(state.report){
+        downloadText(state.report,state.title+'_逆向工程数据库.md');
+    }
+}
+
+function downloadText(text,filename){
+    const b=new Blob([text],{type:'text/markdown;charset=utf-8'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(b);
+    a.download=filename;document.body.appendChild(a);a.click();document.body.removeChild(a);
+}
+
+// Tabs
+document.querySelectorAll('#tabs .tab').forEach(t=>t.onclick=()=>{
+    document.querySelectorAll('#tabs .tab').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    if(t.dataset.t==='full'){$('tabContent').innerHTML=marked.parse(state.report);return}
+    // Extract section from markdown
+    const sections={'chars':'角色谱','plot':'情节谱','world':'世界观','relation':'关系网'};
+    const keyword=sections[t.dataset.t];
+    const report=state.report||'';
+    const regex=new RegExp(`# 一、${keyword}[\\s\\S]*?(?=# 一、|# 二、|# 三、|# 四、|# 五、|# 六、|$)`);
+    const match=report.match(regex);
+    $('tabContent').innerHTML=match?marked.parse(match[0]):'<p style="color:var(--text-muted)">暂无数据</p>';
+});
+
+function toast(msg,type='info'){
+    const el=document.createElement('div');el.className='toast '+type;el.textContent=msg;
+    document.body.appendChild(el);
+    setTimeout(()=>{el.style.opacity='0';setTimeout(()=>el.remove(),300)},3000);
+}
+</script>
+</body>
+</html>
