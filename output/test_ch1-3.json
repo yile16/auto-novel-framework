@@ -1,0 +1,1235 @@
+[
+  {
+    "chapter": 1,
+    "chapter_title": "第一章 天黑别出门",
+    "characters": [
+      {
+        "name": "司婆婆",
+        "role": "主角",
+        "aliases": [],
+        "identity": {
+          "background": "",
+          "occupation_timeline": []
+        },
+        "static_traits": {
+          "personality": "驼背、凶神恶煞、裁缝、会法术（将人变成牛）",
+          "appearance": ""
+        },
+        "abilities_timeline": [],
+        "state_timeline": [
+          {
+            "chapter": 1,
+            "emotional": "紧张、激动、慈爱",
+            "goal": "保护残老村安全，救回婴儿并抚养",
+            "location": "残老村及村外江边",
+            "key_actions": [
+              "听到婴儿哭声后决定出村查看",
+              "与马老背着石像出村",
+              "在江边发现婴儿并带回",
+              "给婴儿取名秦牧",
+              "讲述镶龙城主夫人的往事",
+              "阻止秦牧天黑出门"
+            ]
+          }
+        ],
+        "relationship_snapshots": [],
+        "arc": {
+          "growth_trajectory": "",
+          "core_conflict": "",
+          "key_turning_points": []
+        },
+        "introduction_chapter": 1
+      },
+      {
+        "name": "马老",
+        "role": "配角",
+        "aliases": [],
+        "identity": {
+          "background": "",
+          "occupation_timeline": []
+        },
+        "static_traits": {
+          "personality": "独臂、力气大",
+          "appearance": ""
+        },
+        "abilities_timeline": [],
+        "state_timeline": [
+          {
+            "chapter": 1,
+            "emotional": "担忧、坚决",
+            "goal": "帮助司婆婆出村救婴儿",
+            "location": "残老村及村外江边",
+            "key_actions": [
+              "劝阻司婆婆但最终同意",
+              "独臂背起石像陪司婆婆出村"
+            ]
+          }
+        ],
+        "relationship_snapshots": [],
+        "arc": {
+          "growth_trajectory": "",
+          "core_conflict": "",
+          "key_turning_points": []
+        },
+        "introduction_chapter": 1
+      },
+      {
+        "name": "瘸子",
+        "role": "配角",
+        "aliases": [],
+        "identity": {
+          "background": "",
+          "occupation_timeline": []
+        },
+        "static_traits": {
+          "personality": "一条腿、瘸腿、慈眉善目、憨厚",
+          "appearance": ""
+        },
+        "abilities_timeline": [],
+        "state_timeline": [
+          {
+            "chapter": 1,
+            "emotional": "慈祥、果断",
+            "goal": "保护秦牧，处理威胁",
+            "location": "残老村及江边",
+            "key_actions": [
+              "主动提出背石像（被拒）",
+              "杀死从牛皮中钻出的女子",
+              "将尸体丢入江中",
+              "天黑前打猎归来"
+            ]
+          }
+        ],
+        "relationship_snapshots": [],
+        "arc": {
+          "growth_trajectory": "",
+          "core_conflict": "",
+          "key_turning_points": []
+        },
+        "introduction_chapter": 1
+      },
+      {
+        "name": "村长",
+        "role": "配角",
+        "aliases": [],
+        "identity": {
+          "background": "",
+          "occupation_timeline": []
+        },
+        "static_traits": {
+          "personality": "无手无脚、坐担架、受敬重",
+          "appearance": ""
+        },
+        "abilities_timeline": [],
+        "state_timeline": [
+          {
+            "chapter": 1,
+            "emotional": "沉稳、有权威",
+            "goal": "为婴儿取名并安排未来",
+            "location": "残老村",
+            "key_actions": [
+              "提议给婴儿取名秦牧",
+              "被村民敬重"
+            ]
+          }
+        ],
+        "relationship_snapshots": [],
+        "arc": {
+          "growth_trajectory": "",
+          "core_conflict": "",
+          "key_turning_points": []
+        },
+        "introduction_chapter": 1
+      },
+      {
+        "name": "秦牧",
+        "role": "主角",
+        "aliases": [],
+        "identity": {
+          "background": "",
+          "occupation_timeline": []
+        },
+        "static_traits": {
+          "personality": "十一二岁、眉清目秀、唇红齿白、胸前挂玉佩、放牛娃",
+          "appearance": ""
+        },
+        "abilities_timeline": [],
+        "state_timeline": [
+          {
+            "chapter": 1,
+            "emotional": "好奇、困惑、恐惧",
+            "goal": "了解真相，放牛",
+            "location": "残老村及江边",
+            "key_actions": [
+              "在江边放牛",
+              "听母牛说话并割开牛皮",
+              "被女子威胁",
+              "被瘸子所救",
+              "询问司婆婆黑暗中的东西"
+            ]
+          }
+        ],
+        "relationship_snapshots": [],
+        "arc": {
+          "growth_trajectory": "",
+          "core_conflict": "",
+          "key_turning_points": []
+        },
+        "introduction_chapter": 1
+      },
+      {
+        "name": "镶龙城主夫人",
+        "role": "反派",
+        "aliases": [],
+        "identity": {
+          "background": "",
+          "occupation_timeline": []
+        },
+        "static_traits": {
+          "personality": "善妒、残忍、曾是镶龙城主夫人",
+          "appearance": ""
+        },
+        "abilities_timeline": [],
+        "state_timeline": [
+          {
+            "chapter": 1,
+            "emotional": "愤怒、怨恨",
+            "goal": "杀死秦牧并报复残老村",
+            "location": "江边",
+            "key_actions": [
+              "从牛皮中钻出",
+              "威胁并试图杀死秦牧",
+              "被瘸子杀死"
+            ]
+          }
+        ],
+        "relationship_snapshots": [],
+        "arc": {
+          "growth_trajectory": "",
+          "core_conflict": "",
+          "key_turning_points": []
+        },
+        "introduction_chapter": 1
+      },
+      {
+        "name": "母牛",
+        "role": "龙套",
+        "aliases": [],
+        "identity": {
+          "background": "",
+          "occupation_timeline": []
+        },
+        "static_traits": {
+          "personality": "会说话，实为被变成牛的镶龙城主夫人",
+          "appearance": ""
+        },
+        "abilities_timeline": [],
+        "state_timeline": [
+          {
+            "chapter": 1,
+            "emotional": "哀求",
+            "goal": "让秦牧剥皮救自己",
+            "location": "江边",
+            "key_actions": [
+              "开口说话求秦牧剥皮"
+            ]
+          }
+        ],
+        "relationship_snapshots": [],
+        "arc": {
+          "growth_trajectory": "",
+          "core_conflict": "",
+          "key_turning_points": []
+        },
+        "introduction_chapter": 1
+      }
+    ],
+    "events": [
+      {
+        "summary": "天黑后，残老村外传来婴儿哭声，司婆婆和马老背着石像出村寻找，在江边发现一个被女尸托起的婴儿，带回村子。",
+        "cause": "天黑后村外出现婴儿哭声，司婆婆担心婴儿安危。",
+        "consequence": "婴儿被带回残老村，取名秦牧，由村民抚养长大。",
+        "location": "残老村及村外江边",
+        "characters_involved": [
+          "司婆婆",
+          "马老",
+          "瘸子",
+          "村长"
+        ],
+        "tone": "紧张、温情",
+        "key_moments": [
+          "司婆婆听到婴儿哭声",
+          "马老背石像出村",
+          "发现女尸托着篮子",
+          "司婆婆对女尸说'孩子安全了'",
+          "村长给婴儿取名秦牧"
+        ],
+        "chapter": 1
+      },
+      {
+        "summary": "十一年后，秦牧在江边放牛时，母牛开口说话求他剥皮，秦牧割开牛皮后钻出一个女子，女子欲杀秦牧，被瘸子杀死。",
+        "cause": "母牛实为被司婆婆变成牛的镶龙城主夫人，封印松动后能说话。",
+        "consequence": "女子被杀，秦牧得知部分真相，对世界产生疑惑。",
+        "location": "江边",
+        "characters_involved": [
+          "秦牧",
+          "母牛",
+          "镶龙城主夫人",
+          "瘸子"
+        ],
+        "tone": "悬疑、紧张",
+        "key_moments": [
+          "母牛开口说话",
+          "秦牧割开牛皮",
+          "女子钻出并威胁秦牧",
+          "瘸子从背后杀死女子",
+          "瘸子将尸体丢入江中"
+        ],
+        "chapter": 1
+      },
+      {
+        "summary": "天黑后，秦牧想出门查看牛皮，被司婆婆阻止，并得知黑暗中有可怕的东西。瘸子天黑前打猎归来，猎物尾巴被黑暗吞噬只剩骨头。",
+        "cause": "秦牧好奇牛皮和女子之事，想天黑后出门。",
+        "consequence": "秦牧了解到天黑不能出门的规则，并看到黑暗的可怕。",
+        "location": "残老村",
+        "characters_involved": [
+          "秦牧",
+          "司婆婆",
+          "瘸子"
+        ],
+        "tone": "悬疑、紧张",
+        "key_moments": [
+          "司婆婆阻止秦牧出门",
+          "司婆婆解释黑暗中的东西",
+          "瘸子归来，猛虎尾巴被黑暗吞噬只剩骨头",
+          "秦牧好奇黑暗里有什么"
+        ],
+        "chapter": 1
+      }
+    ],
+    "locations": [
+      {
+        "name": "残老村",
+        "type": "村庄",
+        "description": "偏僻荒凉，四个角竖着四个古老石像，石像在黑暗中散发光芒保护村子。",
+        "atmosphere": "神秘、压抑、安全",
+        "parent": ""
+      },
+      {
+        "name": "江边",
+        "type": "自然景观",
+        "description": "一条大江，青山如黛，碧波白云，是秦牧放牛的地方。",
+        "atmosphere": "宁静、美丽",
+        "parent": ""
+      }
+    ],
+    "setting_revelations": [
+      {
+        "category": "其他",
+        "content": "天黑后黑暗会吞噬一切，黑暗中有可怕的东西，接触黑暗的生物会血肉消失只剩骨头。",
+        "revealed_through": "司婆婆的警告和瘸子带回的猛虎尾巴被黑暗吞噬只剩骨头"
+      },
+      {
+        "category": "其他",
+        "content": "残老村的四个石像在黑暗中会发光，保护村子不受黑暗中的东西侵害。",
+        "revealed_through": "旁白说明和司婆婆的对话"
+      },
+      {
+        "category": "修炼体系",
+        "content": "存在将人变成牛的法术，司婆婆会使用。",
+        "revealed_through": "司婆婆讲述将镶龙城主夫人变成牛的经历"
+      },
+      {
+        "category": "物品设定",
+        "content": "玉佩能发出与石像相似的光芒，保护持有者不受黑暗侵害。",
+        "revealed_through": "旁白说明秦牧襁褓中的玉佩"
+      }
+    ],
+    "relationship_changes": [
+      {
+        "from": "司婆婆",
+        "to": "秦牧",
+        "new_status": "养祖母与养孙",
+        "chapter": 1,
+        "context": "司婆婆从江边捡回婴儿秦牧并抚养长大"
+      },
+      {
+        "from": "瘸子",
+        "to": "秦牧",
+        "new_status": "长辈与晚辈",
+        "chapter": 1,
+        "context": "瘸子杀死威胁秦牧的女子，保护秦牧"
+      },
+      {
+        "from": "司婆婆",
+        "to": "镶龙城主夫人",
+        "new_status": "敌对",
+        "chapter": 1,
+        "context": "司婆婆将镶龙城主夫人变成牛，最终被瘸子杀死"
+      }
+    ],
+    "ability_gains": []
+  },
+  {
+    "chapter": 2,
+    "chapter_title": "第二章 四灵血",
+    "characters": [
+      {
+        "name": "秦牧",
+        "role": "主角",
+        "aliases": [],
+        "identity": {
+          "background": "",
+          "occupation_timeline": []
+        },
+        "static_traits": {
+          "personality": "",
+          "appearance": ""
+        },
+        "abilities_timeline": [],
+        "state_timeline": [
+          {
+            "chapter": 2,
+            "emotional": "紧张、好奇",
+            "goal": "测试灵体",
+            "location": "残老村",
+            "key_actions": [
+              "跟随司婆婆回村",
+              "依次喝下四杯灵血",
+              "安慰司婆婆"
+            ]
+          }
+        ],
+        "relationship_snapshots": [],
+        "arc": {
+          "growth_trajectory": "",
+          "core_conflict": "",
+          "key_turning_points": []
+        },
+        "introduction_chapter": 0
+      },
+      {
+        "name": "司婆婆",
+        "role": "配角",
+        "aliases": [],
+        "identity": {
+          "background": "",
+          "occupation_timeline": []
+        },
+        "static_traits": {
+          "personality": "",
+          "appearance": ""
+        },
+        "abilities_timeline": [],
+        "state_timeline": [
+          {
+            "chapter": 2,
+            "emotional": "兴奋、期待、失望、落泪",
+            "goal": "为秦牧测试灵体",
+            "location": "残老村",
+            "key_actions": [
+              "拉着秦牧回村",
+              "用气显形展示白虎灵体",
+              "落泪担心秦牧未来"
+            ]
+          }
+        ],
+        "relationship_snapshots": [],
+        "arc": {
+          "growth_trajectory": "",
+          "core_conflict": "",
+          "key_turning_points": []
+        },
+        "introduction_chapter": 0
+      },
+      {
+        "name": "村长",
+        "role": "配角",
+        "aliases": [],
+        "identity": {
+          "background": "",
+          "occupation_timeline": []
+        },
+        "static_traits": {
+          "personality": "",
+          "appearance": ""
+        },
+        "abilities_timeline": [],
+        "state_timeline": [
+          {
+            "chapter": 2,
+            "emotional": "威严、坚定、有谋略",
+            "goal": "测试秦牧灵体，维护村民希望",
+            "location": "残老村",
+            "key_actions": [
+              "被担架抬出",
+              "询问四灵是否找到",
+              "解释七大神藏和破壁",
+              "宣布秦牧是霸体",
+              "与药师私下交谈"
+            ]
+          }
+        ],
+        "relationship_snapshots": [],
+        "arc": {
+          "growth_trajectory": "",
+          "core_conflict": "",
+          "key_turning_points": []
+        },
+        "introduction_chapter": 0
+      },
+      {
+        "name": "马爷",
+        "role": "配角",
+        "aliases": [],
+        "identity": {
+          "background": "",
+          "occupation_timeline": []
+        },
+        "static_traits": {
+          "personality": "",
+          "appearance": ""
+        },
+        "abilities_timeline": [],
+        "state_timeline": [
+          {
+            "chapter": 2,
+            "emotional": "期待、失望、自嘲",
+            "goal": "帮助测试秦牧灵体",
+            "location": "残老村",
+            "key_actions": [
+              "拖来青蛟蛇",
+              "展示青龙灵体",
+              "建议送秦牧出大墟"
+            ]
+          }
+        ],
+        "relationship_snapshots": [],
+        "arc": {
+          "growth_trajectory": "",
+          "core_conflict": "",
+          "key_turning_points": []
+        },
+        "introduction_chapter": 0
+      },
+      {
+        "name": "哑巴铁匠",
+        "role": "配角",
+        "aliases": [],
+        "identity": {
+          "background": "",
+          "occupation_timeline": []
+        },
+        "static_traits": {
+          "personality": "",
+          "appearance": ""
+        },
+        "abilities_timeline": [],
+        "state_timeline": [
+          {
+            "chapter": 2,
+            "emotional": "平静",
+            "goal": "参与测试",
+            "location": "残老村",
+            "key_actions": [
+              "提来雷鸟",
+              "摇头表示秦牧不是朱雀灵体"
+            ]
+          }
+        ],
+        "relationship_snapshots": [],
+        "arc": {
+          "growth_trajectory": "",
+          "core_conflict": "",
+          "key_turning_points": []
+        },
+        "introduction_chapter": 0
+      },
+      {
+        "name": "瞎子",
+        "role": "配角",
+        "aliases": [],
+        "identity": {
+          "background": "",
+          "occupation_timeline": []
+        },
+        "static_traits": {
+          "personality": "",
+          "appearance": ""
+        },
+        "abilities_timeline": [],
+        "state_timeline": [
+          {
+            "chapter": 2,
+            "emotional": "平静",
+            "goal": "参与测试",
+            "location": "残老村",
+            "key_actions": [
+              "搬来金龟"
+            ]
+          }
+        ],
+        "relationship_snapshots": [],
+        "arc": {
+          "growth_trajectory": "",
+          "core_conflict": "",
+          "key_turning_points": []
+        },
+        "introduction_chapter": 0
+      },
+      {
+        "name": "屠户",
+        "role": "配角",
+        "aliases": [],
+        "identity": {
+          "background": "",
+          "occupation_timeline": []
+        },
+        "static_traits": {
+          "personality": "",
+          "appearance": ""
+        },
+        "abilities_timeline": [],
+        "state_timeline": [
+          {
+            "chapter": 2,
+            "emotional": "冷静、冷冰冰",
+            "goal": "给四灵放血",
+            "location": "残老村",
+            "key_actions": [
+              "给青蛟蛇、铁骨虎、雷鸟、金龟放血",
+              "说秦牧是普通人",
+              "警告送秦牧出去会连累大家"
+            ]
+          }
+        ],
+        "relationship_snapshots": [],
+        "arc": {
+          "growth_trajectory": "",
+          "core_conflict": "",
+          "key_turning_points": []
+        },
+        "introduction_chapter": 0
+      },
+      {
+        "name": "药师",
+        "role": "配角",
+        "aliases": [],
+        "identity": {
+          "background": "",
+          "occupation_timeline": []
+        },
+        "static_traits": {
+          "personality": "",
+          "appearance": ""
+        },
+        "abilities_timeline": [],
+        "state_timeline": [
+          {
+            "chapter": 2,
+            "emotional": "和蔼、失望、严肃",
+            "goal": "提炼灵血，测试秦牧",
+            "location": "残老村",
+            "key_actions": [
+              "用红色叶子和虫卵提炼灵血",
+              "挤虫血入杯",
+              "说秦牧不是玄武灵体",
+              "与村长私下交谈"
+            ]
+          }
+        ],
+        "relationship_snapshots": [],
+        "arc": {
+          "growth_trajectory": "",
+          "core_conflict": "",
+          "key_turning_points": []
+        },
+        "introduction_chapter": 0
+      }
+    ],
+    "events": [
+      {
+        "summary": "司婆婆带秦牧回村，残老村村民聚集，准备用四灵血测试秦牧的灵体。",
+        "cause": "今天是秦牧的大日子，要测试他是否为灵体。",
+        "consequence": "四灵血被提炼出来，秦牧依次喝下。",
+        "location": "残老村",
+        "characters_involved": [
+          "秦牧",
+          "司婆婆",
+          "村长",
+          "马爷",
+          "哑巴铁匠",
+          "瞎子",
+          "屠户",
+          "药师"
+        ],
+        "tone": "期待、紧张",
+        "key_moments": [
+          "司婆婆说‘今天是你的大日子’",
+          "村长问‘四灵都找到了？’",
+          "屠户给四灵放血",
+          "药师用虫卵提炼灵血"
+        ],
+        "chapter": 2
+      },
+      {
+        "summary": "村长解释七大神藏和破壁概念，马爷和司婆婆展示灵体。",
+        "cause": "需要让秦牧了解修炼基础。",
+        "consequence": "秦牧对灵体有了认知。",
+        "location": "残老村",
+        "characters_involved": [
+          "村长",
+          "秦牧",
+          "马爷",
+          "司婆婆",
+          "药师"
+        ],
+        "tone": "严肃、教导",
+        "key_moments": [
+          "村长说‘人体内藏有七大宝库’",
+          "马爷展示青龙灵体",
+          "司婆婆展示白虎灵体",
+          "药师说‘马爷便是青龙灵体’"
+        ],
+        "chapter": 2
+      },
+      {
+        "summary": "秦牧依次喝下朱雀、白虎、青龙、玄武灵血，但均未激发灵体。",
+        "cause": "测试秦牧是否为四种灵体之一。",
+        "consequence": "秦牧被判定为普通人，村民失望。",
+        "location": "残老村",
+        "characters_involved": [
+          "秦牧",
+          "村长",
+          "司婆婆",
+          "马爷",
+          "哑巴铁匠",
+          "药师"
+        ],
+        "tone": "紧张、失望",
+        "key_moments": [
+          "秦牧喝下朱雀灵血，哑巴摇头",
+          "秦牧喝下白虎灵血，司婆婆失望",
+          "秦牧喝下青龙灵血，马爷失望",
+          "秦牧喝下玄武灵血，药师摇头"
+        ],
+        "chapter": 2
+      },
+      {
+        "summary": "屠户说秦牧是普通人，司婆婆落泪，马爷建议送秦牧出大墟，屠户警告会连累大家。",
+        "cause": "秦牧不是灵体，无法在大墟生存。",
+        "consequence": "村长宣布秦牧是霸体，安抚村民。",
+        "location": "残老村",
+        "characters_involved": [
+          "屠户",
+          "司婆婆",
+          "马爷",
+          "秦牧",
+          "村长"
+        ],
+        "tone": "悲伤、绝望",
+        "key_moments": [
+          "屠户说‘他就是普普通通的普通人’",
+          "司婆婆落泪",
+          "马爷自嘲",
+          "屠户说‘送他出去，我们会被仇家发现’"
+        ],
+        "chapter": 2
+      },
+      {
+        "summary": "村长宣布秦牧是霸体，需要真正的四灵兽血才能激发，村民重燃希望。",
+        "cause": "为了维持村民的生存意志。",
+        "consequence": "村民决定继续捕捉猛兽炼血。",
+        "location": "残老村",
+        "characters_involved": [
+          "村长",
+          "司婆婆",
+          "马爷",
+          "屠户",
+          "药师",
+          "秦牧"
+        ],
+        "tone": "燃、希望",
+        "key_moments": [
+          "村长说‘我觉得牧儿应该是另一种体质，霸体’",
+          "司婆婆说‘明天我也陪死瘸子去捉老虎’"
+        ],
+        "chapter": 2
+      },
+      {
+        "summary": "药师与村长私下交谈，村长承认霸体是谎言，但希望秦牧在信念下走出凡体即霸体的道路。",
+        "cause": "药师质疑霸体的真实性。",
+        "consequence": "决定永远不告诉秦牧真相。",
+        "location": "村长房间",
+        "characters_involved": [
+          "药师",
+          "村长"
+        ],
+        "tone": "沉重、坚定",
+        "key_moments": [
+          "药师说‘从来没有过霸体’",
+          "村长说‘是我信口说的’",
+          "村长说‘让他相信，他就是独一无二的霸体’",
+          "村长说‘凡体即霸体’"
+        ],
+        "chapter": 2
+      }
+    ],
+    "locations": [
+      {
+        "name": "残老村",
+        "type": "村庄",
+        "description": "燃起篝火，村民聚集",
+        "atmosphere": "期待、紧张、后转为悲伤和希望",
+        "parent": "大墟"
+      },
+      {
+        "name": "村长房间",
+        "type": "建筑",
+        "description": "昏暗油灯",
+        "atmosphere": "沉重、秘密",
+        "parent": "残老村"
+      }
+    ],
+    "setting_revelations": [
+      {
+        "category": "修炼体系",
+        "content": "人体内有七大宝库：灵胎、五曜、六合、七星、天人、生死、神桥，称为七大神藏，天生封闭，需破壁开启。",
+        "revealed_through": "村长解释"
+      },
+      {
+        "category": "修炼体系",
+        "content": "破壁是指打破封闭神藏的障碍，如灵胎壁、五曜壁等。",
+        "revealed_through": "村长解释"
+      },
+      {
+        "category": "修炼体系",
+        "content": "灵体是天生灵胎壁已破的人，有四种：青龙、白虎、朱雀、玄武灵体。",
+        "revealed_through": "村长、马爷、司婆婆展示"
+      },
+      {
+        "category": "物品设定",
+        "content": "四灵血是用灵兽或替代灵兽的血提炼的，可激发灵体。",
+        "revealed_through": "药师操作"
+      },
+      {
+        "category": "社会制度",
+        "content": "大墟非常危险，普通人难以生存。",
+        "revealed_through": "马爷和屠户的对话"
+      }
+    ],
+    "relationship_changes": [
+      {
+        "from": "村长",
+        "to": "秦牧",
+        "new_status": "守护者与希望寄托",
+        "chapter": 2,
+        "context": "村长为了维系村民希望，谎称秦牧是霸体，并决心让他相信自己是独一无二的霸体。"
+      },
+      {
+        "from": "药师",
+        "to": "村长",
+        "new_status": "共谋者",
+        "chapter": 2,
+        "context": "药师得知霸体是谎言后，与村长达成共识，永远不告诉秦牧真相。"
+      }
+    ],
+    "ability_gains": []
+  },
+  {
+    "chapter": 3,
+    "chapter_title": "第三章 神通",
+    "characters": [
+      {
+        "name": "秦牧",
+        "role": "主角",
+        "aliases": [],
+        "identity": {
+          "background": "",
+          "occupation_timeline": []
+        },
+        "static_traits": {
+          "personality": "",
+          "appearance": ""
+        },
+        "abilities_timeline": [
+          {
+            "chapter": 3,
+            "abilities": [
+              "力气变大，能单手拎起二十来斤的杀猪刀"
+            ],
+            "context": ""
+          }
+        ],
+        "state_timeline": [
+          {
+            "chapter": 3,
+            "emotional": "敬佩、好奇",
+            "goal": "学习神通",
+            "location": "残老村",
+            "key_actions": [
+              "服用四灵血导致身体膨胀",
+              "与屠夫练习刀法",
+              "与马爷练习拳法",
+              "与瘸子练习腿法"
+            ]
+          }
+        ],
+        "relationship_snapshots": [],
+        "arc": {
+          "growth_trajectory": "",
+          "core_conflict": "",
+          "key_turning_points": []
+        },
+        "introduction_chapter": 0
+      },
+      {
+        "name": "药师",
+        "role": "配角",
+        "aliases": [],
+        "identity": {
+          "background": "",
+          "occupation_timeline": []
+        },
+        "static_traits": {
+          "personality": "",
+          "appearance": ""
+        },
+        "abilities_timeline": [],
+        "state_timeline": [
+          {
+            "chapter": 3,
+            "emotional": "愤怒、担忧",
+            "goal": "控制秦牧的灵血摄入量，防止他被撑死",
+            "location": "残老村",
+            "key_actions": [
+              "提议给秦牧喝灵血",
+              "因村民过量喂灵血而发怒",
+              "用银针为秦牧放气"
+            ]
+          }
+        ],
+        "relationship_snapshots": [],
+        "arc": {
+          "growth_trajectory": "",
+          "core_conflict": "",
+          "key_turning_points": []
+        },
+        "introduction_chapter": 0
+      },
+      {
+        "name": "村长",
+        "role": "配角",
+        "aliases": [],
+        "identity": {
+          "background": "",
+          "occupation_timeline": []
+        },
+        "static_traits": {
+          "personality": "",
+          "appearance": ""
+        },
+        "abilities_timeline": [],
+        "state_timeline": [
+          {
+            "chapter": 3,
+            "emotional": "乐观、期待",
+            "goal": "帮助秦牧提升体质",
+            "location": "残老村",
+            "key_actions": [
+              "与药师商议给秦牧喝灵血",
+              "组织村民猎取灵兽"
+            ]
+          }
+        ],
+        "relationship_snapshots": [],
+        "arc": {
+          "growth_trajectory": "",
+          "core_conflict": "",
+          "key_turning_points": []
+        },
+        "introduction_chapter": 0
+      },
+      {
+        "name": "哑巴铁匠",
+        "role": "配角",
+        "aliases": [],
+        "identity": {
+          "background": "",
+          "occupation_timeline": []
+        },
+        "static_traits": {
+          "personality": "",
+          "appearance": ""
+        },
+        "abilities_timeline": [],
+        "state_timeline": [
+          {
+            "chapter": 3,
+            "emotional": "开心",
+            "goal": "无明确目标",
+            "location": "残老村",
+            "key_actions": [
+              "拖来两只雷鸟"
+            ]
+          }
+        ],
+        "relationship_snapshots": [],
+        "arc": {
+          "growth_trajectory": "",
+          "core_conflict": "",
+          "key_turning_points": []
+        },
+        "introduction_chapter": 0
+      },
+      {
+        "name": "司婆婆",
+        "role": "配角",
+        "aliases": [],
+        "identity": {
+          "background": "",
+          "occupation_timeline": []
+        },
+        "static_traits": {
+          "personality": "",
+          "appearance": ""
+        },
+        "abilities_timeline": [],
+        "state_timeline": [
+          {
+            "chapter": 3,
+            "emotional": "信心满满",
+            "goal": "相信秦牧能撑住",
+            "location": "残老村",
+            "key_actions": [
+              "为秦牧说话"
+            ]
+          }
+        ],
+        "relationship_snapshots": [],
+        "arc": {
+          "growth_trajectory": "",
+          "core_conflict": "",
+          "key_turning_points": []
+        },
+        "introduction_chapter": 0
+      },
+      {
+        "name": "屠夫",
+        "role": "配角",
+        "aliases": [],
+        "identity": {
+          "background": "",
+          "occupation_timeline": []
+        },
+        "static_traits": {
+          "personality": "",
+          "appearance": ""
+        },
+        "abilities_timeline": [],
+        "state_timeline": [
+          {
+            "chapter": 3,
+            "emotional": "癫狂、豪气",
+            "goal": "教秦牧刀法神通",
+            "location": "残老村",
+            "key_actions": [
+              "与秦牧对练刀法",
+              "展示刀法神通（刀切出火焰）",
+              "仰天大叫发疯"
+            ]
+          }
+        ],
+        "relationship_snapshots": [],
+        "arc": {
+          "growth_trajectory": "",
+          "core_conflict": "",
+          "key_turning_points": []
+        },
+        "introduction_chapter": 0
+      },
+      {
+        "name": "马爷",
+        "role": "配角",
+        "aliases": [],
+        "identity": {
+          "background": "",
+          "occupation_timeline": []
+        },
+        "static_traits": {
+          "personality": "",
+          "appearance": ""
+        },
+        "abilities_timeline": [],
+        "state_timeline": [
+          {
+            "chapter": 3,
+            "emotional": "严肃、认真",
+            "goal": "教秦牧拳法神通",
+            "location": "残老村",
+            "key_actions": [
+              "展示拳法神通（打出雷音、手握雷电）",
+              "与秦牧对练，毫不留情地打他"
+            ]
+          }
+        ],
+        "relationship_snapshots": [],
+        "arc": {
+          "growth_trajectory": "",
+          "core_conflict": "",
+          "key_turning_points": []
+        },
+        "introduction_chapter": 0
+      },
+      {
+        "name": "瘸子",
+        "role": "配角",
+        "aliases": [],
+        "identity": {
+          "background": "",
+          "occupation_timeline": []
+        },
+        "static_traits": {
+          "personality": "",
+          "appearance": ""
+        },
+        "abilities_timeline": [],
+        "state_timeline": [
+          {
+            "chapter": 3,
+            "emotional": "憨厚、可靠",
+            "goal": "教秦牧腿法神通",
+            "location": "残老村",
+            "key_actions": [
+              "教秦牧腿功",
+              "提到腿法神通的核心是跑得快"
+            ]
+          }
+        ],
+        "relationship_snapshots": [],
+        "arc": {
+          "growth_trajectory": "",
+          "core_conflict": "",
+          "key_turning_points": []
+        },
+        "introduction_chapter": 0
+      }
+    ],
+    "events": [
+      {
+        "summary": "药师提议给秦牧喝灵血以提升体质，村长赞同。第二天村民猎来更多灵兽，药师因过量喂血而发怒，用银针为秦牧放气。",
+        "cause": "秦牧需要提升体质以激发灵体",
+        "consequence": "秦牧身体膨胀，经银针放气后恢复，但需要进一步消化灵血",
+        "location": "残老村",
+        "characters_involved": [
+          "药师",
+          "村长",
+          "哑巴铁匠",
+          "司婆婆",
+          "秦牧"
+        ],
+        "tone": "紧张",
+        "key_moments": [
+          "药师说'给他喝灵血，多多的喝'",
+          "秦牧身体像充气般膨胀",
+          "药师用银针放气"
+        ],
+        "chapter": 3
+      },
+      {
+        "summary": "屠夫教秦牧刀法，展示刀法神通——刀切出火焰，并鼓励秦牧追求速度与燃烧。",
+        "cause": "帮助秦牧消化灵血并学习神通",
+        "consequence": "秦牧见识到刀法神通，对屠夫产生敬佩",
+        "location": "残老村",
+        "characters_involved": [
+          "屠夫",
+          "秦牧"
+        ],
+        "tone": "燃",
+        "key_moments": [
+          "屠夫说'燃烧！燃烧！让你的刀燃烧'",
+          "屠夫的刀切出火焰，形成火龙",
+          "屠夫仰天大叫'老子早晚要劈开这黑'"
+        ],
+        "chapter": 3
+      },
+      {
+        "summary": "马爷教秦牧拳法，展示拳法神通——打出雷音、手握雷电，并与秦牧对练。",
+        "cause": "帮助秦牧消化灵血并学习神通",
+        "consequence": "秦牧被打得鼻青脸肿，但了解了拳法神通",
+        "location": "残老村",
+        "characters_involved": [
+          "马爷",
+          "秦牧"
+        ],
+        "tone": "严肃",
+        "key_moments": [
+          "马爷说'打出雷音才是神通'",
+          "马爷展示千手佛陀，手握雷电",
+          "马爷毫不留情地打秦牧"
+        ],
+        "chapter": 3
+      },
+      {
+        "summary": "瘸子教秦牧腿法，强调腿法神通的核心是跑得快，并准备让秦牧上铁锭练习。",
+        "cause": "帮助秦牧消化灵血并学习神通",
+        "consequence": "秦牧了解到腿法神通的理念",
+        "location": "残老村",
+        "characters_involved": [
+          "瘸子",
+          "秦牧"
+        ],
+        "tone": "轻松",
+        "key_moments": [
+          "瘸子说'生活不仅仅有诗和远方，还有苟且'",
+          "瘸子说'跑得足够快，一切都是平地'"
+        ],
+        "chapter": 3
+      }
+    ],
+    "locations": [
+      {
+        "name": "残老村",
+        "type": "村落",
+        "description": "村落上空有黑暗，村四角有石像发出光芒逼退黑暗",
+        "atmosphere": "压抑但有庇护感",
+        "parent": ""
+      },
+      {
+        "name": "独木桩",
+        "type": "建筑",
+        "description": "屠夫立在上面的木桩",
+        "atmosphere": "训练场",
+        "parent": "残老村"
+      }
+    ],
+    "setting_revelations": [
+      {
+        "category": "修炼体系",
+        "content": "神通是刀法、拳法、腿法修炼到极致后产生的特殊能力，如刀切出火焰、拳打出雷音、腿跑得比声音快。",
+        "revealed_through": "角色对话和展示"
+      },
+      {
+        "category": "修炼体系",
+        "content": "灵血可以提升体质，但过量会撑死，需要循序渐进。",
+        "revealed_through": "药师的行为和对话"
+      },
+      {
+        "category": "历史背景",
+        "content": "残老村外有黑暗，似乎有生命，村中石像能逼退黑暗。屠夫曾与黑暗战斗并被砍断腰。",
+        "revealed_through": "屠夫的行为和对话"
+      }
+    ],
+    "relationship_changes": [],
+    "ability_gains": [
+      {
+        "character": "秦牧",
+        "abilities": [
+          "力气增大，能单手拎起二十来斤的杀猪刀"
+        ],
+        "chapter": 3,
+        "context": "服用四灵血后"
+      }
+    ]
+  }
+]
