@@ -27,13 +27,18 @@ class LLMClient:
 
     def __init__(self, config: DecomposeConfig):
         self.config = config
-        api_key = config.api_key or os.environ.get("ANTHROPIC_API_KEY", "") or os.environ.get("DEEPSEEK_API_KEY", "")
+        self._client = None  # lazy init on first use
+
+    def _ensure_client(self):
+        if self._client is not None:
+            return
+        api_key = self.config.api_key or os.environ.get("ANTHROPIC_API_KEY", "") or os.environ.get("DEEPSEEK_API_KEY", "")
         if not api_key:
             raise ValueError(
                 "API key not set. Set ANTHROPIC_API_KEY or DEEPSEEK_API_KEY env var, "
                 "or pass api_key in config."
             )
-        self._client = OpenAI(api_key=api_key, base_url=config.base_url)
+        self._client = OpenAI(api_key=api_key, base_url=self.config.base_url)
 
     def chat(
         self,
@@ -43,6 +48,7 @@ class LLMClient:
         temperature: float | None = None,
     ) -> str:
         """Send a message and return the text response."""
+        self._ensure_client()
         response = self._client.chat.completions.create(
             model=self.config.model,
             max_tokens=max_tokens or self.config.max_tokens,
