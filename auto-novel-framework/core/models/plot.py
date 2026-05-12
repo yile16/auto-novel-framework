@@ -1,6 +1,8 @@
 """Plot schema models with thread/stage/chapter-event hierarchy, foreshadowing, assets, combat power."""
 
-from pydantic import BaseModel, Field
+from typing import Any
+
+from pydantic import BaseModel, Field, field_validator
 
 
 class KeyMilestone(BaseModel):
@@ -57,11 +59,18 @@ class ForeshadowingItem(BaseModel):
 
 class AssetChange(BaseModel):
     """A change in the protagonist's assets/inventory."""
-    chapter: int
+    chapter: Any = 0
     operation: str = ""  # 获得/消耗/升级/转让
-    item_name: str
-    quantity: str = ""
+    item_name: str = ""
+    quantity: Any = ""
     source_or_target: str = ""  # where it came from or where it went
+
+    @field_validator("quantity", mode="before")
+    @classmethod
+    def coerce_quantity(cls, v):
+        if v is None:
+            return ""
+        return str(v)
 
 
 class CombatPowerState(BaseModel):

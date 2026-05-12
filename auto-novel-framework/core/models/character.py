@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from typing import Optional
+from typing import Any, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 
 class OccupationChange(BaseModel):
@@ -47,7 +47,22 @@ class CharacterState(BaseModel):
 class CharacterArc(BaseModel):
     growth_trajectory: str = ""
     core_conflict: str = ""
-    key_turning_points: list[str] = Field(default_factory=list)
+    key_turning_points: list[Any] = Field(default_factory=list)
+
+    @field_validator("key_turning_points", mode="before")
+    @classmethod
+    def normalize_turning_points(cls, v):
+        result = []
+        for item in (v or []):
+            if isinstance(item, str):
+                result.append(item)
+            elif isinstance(item, dict):
+                ch = item.get("chapter", "")
+                event = item.get("event", "")
+                result.append(f"第{ch}章: {event}" if ch else str(event))
+            else:
+                result.append(str(item))
+        return result
 
 
 class CombatPowerProgression(BaseModel):
