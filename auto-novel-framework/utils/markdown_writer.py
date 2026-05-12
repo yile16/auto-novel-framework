@@ -74,6 +74,10 @@ def decomposition_to_markdown(json_path: str | Path, output_path: str | Path | N
     locations = _l(data.get("world_setting", {}).get("locations", []))
     relations = _l(data.get("relationships", {}).get("character_relations", []))
     settings = _l(data.get("world_setting", {}).get("power_system", {}).get("rule_discovery_timeline", []))
+    foreshadowing = _l(data.get("plot", {}).get("foreshadowing_tracking", []))
+    combat_timeline = _l(data.get("plot", {}).get("combat_power_timeline", []))
+    asset_timeline = _l(data.get("plot", {}).get("asset_timeline", []))
+    cheat_stages = _l(data.get("world_setting", {}).get("cheat_system", {}).get("evolution_stages", []))
 
     h2("拆解概览")
     table(
@@ -84,6 +88,10 @@ def decomposition_to_markdown(json_path: str | Path, output_path: str | Path | N
             ["地点", len(locations)],
             ["关系演化", len(relations)],
             ["设定揭示", len(settings)],
+            ["伏笔追踪", len(foreshadowing)],
+            ["战力变化", len(combat_timeline)],
+            ["资产变动", len(asset_timeline)],
+            ["金手指演化", len(cheat_stages)],
         ],
     )
 
@@ -124,6 +132,14 @@ def decomposition_to_markdown(json_path: str | Path, output_path: str | Path | N
                 w(f"  - 第 {ab.get('chapter', '?')} 章: {abs_str}")
             if len(ab_tl) > 15:
                 w(f"  - ... 共 {len(ab_tl)} 次")
+
+        cp_tl = _l(c.get("combat_power_timeline", []))
+        if cp_tl:
+            w(f"- **战力进阶线** ({len(cp_tl)} 次变化):")
+            for cp in cp_tl[:20]:
+                w(f"  - 第 {cp.get('chapter', '?')} 章: {cp.get('level', '?')} {cp.get('sub_level', '')} ({cp.get('change', '')})")
+            if len(cp_tl) > 20:
+                w(f"  - ... 共 {len(cp_tl)} 次战力变化")
 
         state_tl = _l(c.get("state_timeline", []))
         if state_tl:
@@ -173,6 +189,7 @@ def decomposition_to_markdown(json_path: str | Path, output_path: str | Path | N
         w(f"- **地点**: {_s(ev.get('location', ''))}")
         w(f"- **参与角色**: {chars_str}")
         w(f"- **摘要**: {_s(ev.get('summary', ''))}")
+        w(f"- **因果链**: {_s(ev.get('causal_chain', ''))}")
         w(f"- **原因**: {_s(ev.get('cause', ''))}")
         w(f"- **后果**: {_s(ev.get('consequence', ''))}")
         w(f"- **情绪基调**: {_s(ev.get('tone', ''))}")
@@ -183,10 +200,95 @@ def decomposition_to_markdown(json_path: str | Path, output_path: str | Path | N
                 w(f"  - {m}")
         w()
 
+    # ====== FORESHADOWING ======
+    if foreshadowing:
+        h2("伏笔追踪总表")
+        unresolved = [f for f in foreshadowing if not f.get("resolved_chapter") or f.get("resolved_chapter") == 0]
+        resolved = [f for f in foreshadowing if f.get("resolved_chapter") and f.get("resolved_chapter") != 0]
+        w(f"- 未回收: **{len(unresolved)}** 条 | 已回收: **{len(resolved)}** 条")
+        w()
+        table(
+            ["编号", "描述", "埋坑章节", "涉及人物", "回收章节", "回收方式", "圆满度"],
+            [
+                [
+                    f.get("id", ""),
+                    _s(f.get("description", ""))[:60],
+                    str(f.get("planted_chapter", "?")),
+                    ", ".join(_l(f.get("involved_characters", []))[:3]),
+                    str(f.get("resolved_chapter", "未回收")),
+                    _s(f.get("resolution", ""))[:50],
+                    _s(f.get("resolution_quality", "")),
+                ]
+                for f in foreshadowing[:100]
+            ],
+        )
+
+    # ====== COMBAT POWER ======
+    if combat_timeline:
+        h2("主角战力追踪总表")
+        table(
+            ["章节", "等级", "小境界", "变化描述"],
+            [
+                [str(cp.get("chapter", "?")), cp.get("level", ""), cp.get("sub_level", ""),
+                 _s(cp.get("change_description", ""))[:70]]
+                for cp in combat_timeline[:100]
+            ],
+        )
+
+    # ====== ASSETS ======
+    if asset_timeline:
+        h2("核心资产变动总表")
+        table(
+            ["章节", "操作", "物品/资源", "数量", "来源/去向"],
+            [
+                [str(a.get("chapter", "?")), a.get("operation", ""),
+                 a.get("item_name", ""), a.get("quantity", ""),
+                 _s(a.get("source_or_target", ""))[:50]]
+                for a in asset_timeline[:100]
+            ],
+        )
+
     # ====== 3. WORLD SETTING ======
     h1("三、世界观设定")
 
-    h2("地点")
+    # Cheat system evolution
+    if cheat_stages:
+        h2("金手指/外挂系统演化")
+        cheat_name = _s(data.get("world_setting", {}).get("cheat_system", {}).get("name", ""))
+        w(f"**系统名称**: {cheat_name or '未命名'}")
+        w()
+        table(
+            ["阶段", "章节", "形态描述", "新增功能", "限制/缺陷"],
+            [
+                [
+                    cs.get("stage", ""),
+                    str(cs.get("chapter", "?")),
+                    _s(cs.get("form_description", ""))[:60],
+                    "、".join(_l(cs.get("new_functions", []))[:3]),
+                    _s(cs.get("limitations", ""))[:50],
+                ]
+                for cs in cheat_stages[:30]
+            ],
+        )
+
+    # Factions
+    h2("势力/组织")
+    factions = _l(data.get("world_setting", {}).get("factions", []))
+    if factions:
+        table(
+            ["势力名", "类型", "描述", "核心成员"],
+            [
+                [f.get("name", ""), f.get("type", ""),
+                 _s(f.get("description", ""))[:60],
+                 "、".join(_l(f.get("key_members", []))[:5])]
+                for f in factions[:50]
+            ],
+        )
+    else:
+        w("*暂无势力数据*")
+        w()
+
+    h2("地点（地图）")
     loc_rows = []
     for loc in locations:
         apps = _l(loc.get("appearances", []))

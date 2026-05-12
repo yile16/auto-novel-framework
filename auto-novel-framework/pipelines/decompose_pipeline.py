@@ -64,16 +64,38 @@ class DecomposePipeline:
         )
         logger.info(f"Split into {len(chunks)} chunks")
 
-        # Step 2: Extract per chapter (parallel)
-        logger.info("Step 3: Extracting per-chapter data (parallel)...")
-        extractions = self.extractor.extract_batch(chunks)
-        logger.info(f"Extracted {len(extractions)} chapters")
+        # Step 2: Extract chapters in arc batches, with context relay
+        logger.info("Step 3: Extracting per-chapter data (batched, with context relay)...")
+        arc_size = self.config.chapters_per_arc
+
+        # Split chunks into arc batches
+        chunk_batches = [
+            chunks[i : i + arc_size]
+            for i in range(0, len(chunks), arc_size)
+        ]
+        logger.info(f"Split into {len(chunk_batches)} arc batches (~{arc_size} chapters each)")
+
+        all_extractions: list = []
+        previous_context = ""
+        for batch_idx, batch_chunks in enumerate(chunk_batches):
+            batch_context = previous_context
+            logger.info(f"Extracting batch {batch_idx + 1}/{len(chunk_batches)} "
+                        f"(chapters {batch_chunks[0].chapter_start}-{batch_chunks[-1].chapter_start})")
+            extractions = self.extractor.extract_batch(
+                batch_chunks, previous_context=batch_context
+            )
+            all_extractions.extend(extractions)
+
+            # Build context from this batch for the next batch relay
+            previous_context = self.extractor.build_context_summary(extractions)
+
+        logger.info(f"Extracted {len(all_extractions)} chapters total")
 
         # Save raw extractions for debugging
         raw_path = output_dir / "raw_extractions.json"
         raw_path.write_text(
             json.dumps(
-                [e.model_dump(exclude_none=True) for e in extractions],
+                [e.model_dump(exclude_none=True) for e in all_extractions],
                 ensure_ascii=False,
                 indent=2,
             ),
@@ -83,12 +105,11 @@ class DecomposePipeline:
 
         # Step 3: Merge into arcs
         logger.info("Step 4: Merging chapters into arcs...")
-        arc_size = self.config.chapters_per_arc
-        batches = [
-            extractions[i : i + arc_size]
-            for i in range(0, len(extractions), arc_size)
+        batch_extractions = [
+            all_extractions[i : i + arc_size]
+            for i in range(0, len(all_extractions), arc_size)
         ]
-        arc_states = self.merger.merge_all_arcs_sequentially(batches)
+        arc_states = self.merger.merge_all_arcs_sequentially(batch_extractions)
         logger.info(f"Merged into {len(arc_states)} arc states")
 
         # Save arc states
@@ -104,7 +125,7 @@ class DecomposePipeline:
             arc_states,
             title=novel.title,
             author=novel.author,
-            total_chapters=len(extractions),
+            total_chapters=len(all_extractions),
         )
 
         # Step 5: Save output

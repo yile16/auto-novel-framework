@@ -29,7 +29,7 @@ class RawChapterExtraction(BaseModel):
     # New characters introduced or appearing in this chapter
     characters: list[Character] = Field(default_factory=list)
 
-    # Events in this chapter
+    # Events in this chapter (causal chains: trigger -> action -> consequence)
     events: list = Field(default_factory=list)  # list of dict, loosely structured
 
     # Locations appearing in this chapter
@@ -43,3 +43,15 @@ class RawChapterExtraction(BaseModel):
 
     # Ability gains in this chapter
     ability_gains: list = Field(default_factory=list)
+
+    # Foreshadowing: new holes planted or old ones resolved
+    foreshadowing: list = Field(default_factory=list)
+
+    # Combat power level changes for protagonist
+    combat_power_changes: list = Field(default_factory=list)
+
+    # Asset/inventory changes in this chapter
+    asset_changes: list = Field(default_factory=list)
+
+    # Golden finger/cheat system changes
+    cheat_system_changes: list = Field(default_factory=list)

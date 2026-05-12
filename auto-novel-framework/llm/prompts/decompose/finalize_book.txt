@@ -9,17 +9,25 @@
 - 补充角色的 arc（弧光总结）：成长轨迹、核心矛盾、关键转折点
 - state_timeline 必须覆盖所有出现章节，无遗漏
 - abilities_timeline 形成完整的成长曲线
+- combat_power_timeline 形成完整的战力提升曲线，每个变化标注章节和原因
 - 为每个角色补充 relationship_snapshots（从 relationships 板块反推）
 
 ### 2. 情节谱 (plot) — 最终整合
 - 识别并命名所有的情节线（threads），区分主线和支线
 - 每条情节线划分成阶段（stages），每个阶段包含章节范围和摘要
-- chapter_events 必须覆盖全书所有章节
+- chapter_events 必须覆盖全书所有章节，每个事件包含 causal_chain
 - 识别重大转折点（twists），标注章节和对故事的影响
+- **伏笔总表** (foreshadowing_tracking)：汇总全书所有伏笔的完整生命周期
+  - 标记已回收的伏笔及回收质量（圆满/勉强/未回收）
+  - 标记悬而未决的伏笔
+- **战力总表** (combat_power_timeline)：主角全书战力变化，按章节标注
+- **资产总表** (asset_timeline)：全书核心资产变动，按章节标注操作和来源
 
 ### 3. 世界观设定 (world_setting) — 最终整合
 - 合并同一地点/势力在不同弧段的信息
-- 修炼体系的 rule_discovery_timeline 覆盖全书
+- 修炼体系的 rule_discovery_timeline 覆盖全书，每条标注解锁章节
+- **金手指演化史** (cheat_system)：记录外挂系统的完整演化过程
+  - 每个阶段标注章节、形态描述、新增功能、限制/缺陷
 - 补充特殊物品的 revealed_abilities 时间线
 
 ### 4. 关系网 (relationships) — 最终整合
@@ -52,6 +60,9 @@ characters:
       appearance: ...
     abilities_timeline:
       - {chapter: 1, abilities: [...], context: "..."}
+    combat_power_timeline:
+      - {chapter: 1, level: "凡人", sub_level: "", change: "初始状态"}
+      - {chapter: 50, level: "筑基", sub_level: "初期", change: "服用地火丹突破"}
     state_timeline:
       - {chapter: 1, emotional: "...", goal: "...", location: "...", key_actions: [...]}
     relationship_snapshots:
@@ -75,7 +86,16 @@ plot:
   chapter_events:
     - {chapter: 1, title: "...", timeline_point: "...", location: "...",
        characters: [...], summary: "...", cause: "...", consequence: "...",
+       causal_chain: "[触发因] -> [核心行动] -> [状态改变结果]",
        tone: "...", key_moments: [...]}
+  foreshadowing_tracking:
+    - {id: "伏笔-1", description: "...", planted_chapter: 1,
+       involved_characters: [...], estimated_purpose: "...",
+       resolved_chapter: 120, resolution: "...", resolution_quality: "圆满"}
+  combat_power_timeline:
+    - {chapter: 1, level: "凡人", sub_level: "", change_description: "初始状态"}
+  asset_timeline:
+    - {chapter: 35, operation: "获得", item_name: "玄铁重剑", quantity: "1", source_or_target: "从古墓中获得"}
   twists:
     - {chapter: 100, event: "...", impact: "..."}
 
@@ -90,6 +110,11 @@ world_setting:
     special_rules: [...]
     rule_discovery_timeline:
       - {chapter: 1, rule: "...", revealed_through: "..."}
+  cheat_system:
+    name: "系统"
+    evolution_stages:
+      - {stage: "初始觉醒", chapter: 1, form_description: "...",
+         new_functions: ["..."], limitations: "..."}
   factions:
     - {name: "...", type: "...", description: "...",
        key_members: [...],
@@ -123,7 +148,10 @@ style:
 ```
 
 ## 关键原则
-- 完整性：全书所有章节的信息不能有遗漏
-- 去重：同一实体只出现一次，信息合并
-- 时间线准确：每条信息必须标注正确的来源章节
-- 可重建性：这份文档应该足够详细，以至于一个写手拿着它就能重写出整本小说
+- **完整性**：全书所有章节的信息不能有遗漏
+- **去重**：同一实体只出现一次，信息合并
+- **伏笔完整性**：每个伏笔必须有完整的生命周期记录
+- **战力连续性**：战力变化必须按章节能回溯
+- **资产可追溯**：每个物品的获得、消耗、升级都有据可查
+- **时间线准确**：每条信息必须标注正确的来源章节
+- **可重建性**：这份文档应该足够详细，以至于一个写手拿着它就能重写出整本小说

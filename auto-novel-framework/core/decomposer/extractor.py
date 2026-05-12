@@ -115,15 +115,26 @@ class ChapterExtractor:
             self._system_prompt = _load_prompt("decompose/extract_chapter")
         return self._system_prompt
 
-    def extract_one(self, chunk: Chunk) -> RawChapterExtraction:
+    def extract_one(self, chunk: Chunk, previous_context: str = "") -> RawChapterExtraction:
         """
         Extract structured data from a single chapter chunk.
+
+        Args:
+            chunk: The chapter chunk to extract from.
+            previous_context: Summary of previous extractions to carry context forward.
         """
         user_message = (
             f"章节号: {chunk.chapter_start}\n"
             f"章节标题: {chunk.title}\n\n"
             f"--- 章节正文 ---\n{chunk.text}"
         )
+        if previous_context:
+            user_message = (
+                f"## 前序章节关键信息（上下文接力，请在此基础上继续提取）\n"
+                f"{previous_context}\n\n"
+                f"---\n\n"
+                + user_message
+            )
 
         raw = self.llm.extract_json(self.system_prompt, user_message)
 
@@ -154,13 +165,18 @@ class ChapterExtractor:
             setting_revelations=raw.get("setting_revelations", []),
             relationship_changes=raw.get("relationship_changes", []),
             ability_gains=raw.get("ability_gains", []),
+            foreshadowing=raw.get("foreshadowing", []),
+            combat_power_changes=raw.get("combat_power_changes", []),
+            asset_changes=raw.get("asset_changes", []),
+            cheat_system_changes=raw.get("cheat_system_changes", []),
         )
 
     def extract_batch(
-        self, chunks: list[Chunk], max_workers: int | None = None
+        self, chunks: list[Chunk], max_workers: int | None = None, previous_context: str = ""
     ) -> list[RawChapterExtraction]:
         """
         Extract from multiple chapters in parallel.
+        Provides context relay to each chunk.
         Results are returned in chunk order.
         """
         if max_workers is None:
@@ -170,7 +186,7 @@ class ChapterExtractor:
 
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             future_to_idx = {
-                executor.submit(self.extract_one, chunk): chunk.index
+                executor.submit(self.extract_one, chunk, previous_context): chunk.index
                 for chunk in chunks
             }
             for future in as_completed(future_to_idx):
@@ -182,3 +198,46 @@ class ChapterExtractor:
                     logger.error(f"Failed to extract chunk {idx}: {e}")
 
         return [results[i] for i in sorted(results)]
+
+    def build_context_summary(self, extractions: list[RawChapterExtraction], max_chars: int = 6000) -> str:
+        """
+        Build a compact context summary from previous extractions for relay to next chunk.
+        Focuses on: characters, key events, foreshadowing, combat power state, active settings.
+        """
+        if not extractions:
+            return ""
+
+        lines = []
+        # Collect unresolved foreshadowing
+        foreshadowing = []
+        # Last known combat power
+        last_combat = None
+        # Active characters
+        chars_seen = set()
+
+        for ext in extractions:
+            for c in ext.characters:
+                if c.name not in chars_seen:
+                    chars_seen.add(c.name)
+                    lines.append(f"- 角色 {c.name}（{c.role or '未知定位'}）登场于第{ext.chapter}章")
+            for f_item in (ext.foreshadowing or []):
+                if isinstance(f_item, dict) and f_item.get("type") == "新挖的坑":
+                    foreshadowing.append(f"- [未回收] 第{ext.chapter}章挖坑：{f_item.get('description', '')}")
+                elif isinstance(f_item, dict) and f_item.get("type") == "已回收的坑":
+                    foreshadowing.append(f"- [已回收] 第{ext.chapter}章填坑：{f_item.get('description', '')}（回收方式：{f_item.get('resolution', '')}）")
+            for cp in (ext.combat_power_changes or []):
+                if isinstance(cp, dict):
+                    last_combat = f"第{ext.chapter}章：{cp.get('level_after', '?')}（{cp.get('change_description', '')}）"
+
+        if chars_seen:
+            lines.insert(0, f"## 已登场角色（{len(chars_seen)}人）")
+        if foreshadowing:
+            lines.append(f"\n## 伏笔状态（{len(foreshadowing)}条）")
+            lines.extend(foreshadowing[-10:])  # keep last 10
+        if last_combat:
+            lines.append(f"\n## 主角当前战力\n{last_combat}")
+
+        summary = "\n".join(lines)
+        if len(summary) > max_chars:
+            summary = summary[-max_chars:]
+        return summary

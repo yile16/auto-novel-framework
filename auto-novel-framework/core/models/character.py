@@ -50,6 +50,14 @@ class CharacterArc(BaseModel):
     key_turning_points: list[str] = Field(default_factory=list)
 
 
+class CombatPowerProgression(BaseModel):
+    """Character combat power level at a specific chapter."""
+    chapter: int
+    level: str = ""  # e.g. 筑基期, 金丹期
+    sub_level: str = ""  # e.g. 初期/中期/后期/圆满
+    change: str = ""  # description of what changed
+
+
 class Character(BaseModel):
     name: str
     role: str = ""  # protagonist, antagonist, supporting, etc.
@@ -59,6 +67,7 @@ class Character(BaseModel):
     abilities_timeline: list[AbilityGain] = Field(default_factory=list)
     state_timeline: list[CharacterState] = Field(default_factory=list)
     relationship_snapshots: list[RelationshipSnapshot] = Field(default_factory=list)
+    combat_power_timeline: list[CombatPowerProgression] = Field(default_factory=list)
     arc: CharacterArc = Field(default_factory=CharacterArc)
     introduction_chapter: int = 0
     death_chapter: Optional[int] = None

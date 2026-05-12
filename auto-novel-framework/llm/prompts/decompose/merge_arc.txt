@@ -9,28 +9,38 @@
 - 角色的基本信息（name, role, identity, static_traits）只出现一次
 - state_timeline 按章节顺序排列，每一章一条记录
 - abilities_timeline 按章节顺序排列，记录能力的变化
+- combat_power_timeline 按章节顺序排列，记录战力等级变化
 - relationship_snapshots 按章节排列，只记录有变化的关系
 
-### 2. 事件整理
-- chapter_events 按章节顺序排列，每个章节的多个事件合并为最关键的1-3个
-- 保持 cause → event → consequence 的因果链完整
+### 2. 因果链与事件整理
+- chapter_events 按章节顺序排列，每个章节合并为最关键的1-3个事件
+- 保持 causal_chain 的严格格式：[触发因] -> [核心行动] -> [状态改变结果]
 - 标注 tone（情绪基调）
 
-### 3. 世界设定积累
-- 同一地点在多个章节出现时，合并其描述信息
-- 记录每个地点的 first_chapter（首次出现章节）和 appearances（出现章节列表）
-- 修炼体系/世界规则按 rule_discovery_timeline 记录揭示时间线
-- 势力/宗门记录其 timeline
+### 3. 伏笔追踪
+- foreshadowing_tracking 汇总所有章节的伏笔信息
+- 合并同一伏笔的"新挖"和"已回收"为一条完整记录（id, planted_chapter, resolved_chapter, resolution）
+- 标记已回收伏笔的 resolution_quality（圆满/勉强）
 
-### 4. 关系演化
+### 4. 战力与资产
+- combat_power_timeline 按章节记录主角战力等级变化
+- asset_timeline 按章节记录核心资产变动（获得/消耗/升级/转让）
+
+### 5. 世界设定积累
+- 同一地点在多个章节出现时，合并其描述信息
+- 记录每个地点的 first_chapter 和 appearances
+- 修炼体系/世界规则按 rule_discovery_timeline 记录揭示时间线
+- cheat_system 记录金手指的演化阶段，每个阶段注明章节号和新功能
+
+### 6. 关系演化
 - 同一对角色在多个章节的关系变化合并为一条 evolution 时间线
 - 势力间关系变化记录为 timeline
 
-### 5. 合并已有状态
+### 7. 合并已有状态
 - 如果提供了"已有累积状态"，新提取的信息应该更新/补充到已有状态中
 - 同一角色的新章节状态追加到 state_timeline 末尾
-- 新发现的地点加入 locations 列表
-- 新的事件追加到 chapter_events 末尾
+- 新的伏笔追加到 foreshadowing_tracking
+- 新的战力/资产变化追加到对应时间线
 
 ## 输出格式
 严格的 YAML 格式（不要用 markdown 代码块包裹），结构如下：
@@ -50,12 +60,15 @@ characters:
         goal: ...
         location: ...
         key_actions: [...]
-      - chapter: 2
-        ...
     abilities_timeline:
       - chapter: 1
         abilities: [...]
         context: ...
+    combat_power_timeline:
+      - chapter: 1
+        level: ...
+        sub_level: ...
+        change: ...
     introduction_chapter: ...
     arc:
       growth_trajectory: ...
@@ -69,18 +82,45 @@ plot:
       summary: ...
       cause: ...
       consequence: ...
+      causal_chain: "[触发因] -> [核心行动] -> [状态改变结果]"
       location: ...
       characters: [...]
       tone: ...
       key_moments: [...]
-    - chapter: 2
-      ...
+  foreshadowing_tracking:
+    - id: "伏笔-1"
+      description: ...
+      planted_chapter: ...
+      involved_characters: [...]
+      estimated_purpose: ...
+      resolved_chapter: 0   # 0 表示尚未回收
+      resolution: ...
+      resolution_quality: ...
+  combat_power_timeline:
+    - chapter: 1
+      level: ...
+      sub_level: ...
+      change_description: ...
+  asset_timeline:
+    - chapter: 1
+      operation: 获得
+      item_name: ...
+      quantity: ...
+      source_or_target: ...
   twists: []
 
 world_setting:
   power_system:
     stages: []
     rule_discovery_timeline: []
+  cheat_system:
+    name: ""
+    evolution_stages:
+      - stage: ...
+        chapter: ...
+        form_description: ...
+        new_functions: [...]
+        limitations: ...
   locations:
     - name: ...
       type: ...
@@ -98,14 +138,13 @@ relationships:
       evolution:
         - chapter: 1
           status: ...
-        - chapter: 2
-          status: ...
 
 style: {}
 ```
 
 ## 重要提醒
 - 不要遗漏任何章节的信息
-- 相同实体（角色/地点/物品）的去重合并是最重要的
-- 如果某个字段在当前弧段没有信息，留空或使用空列表
+- 相同实体（角色/地点/物品/伏笔）的去重合并是最重要的
+- 伏笔必须追踪完整生命周期（planted → resolved 或 未回收）
+- 战力变化必须按章节能连起来
 - 保持时间线的准确性——每一条信息都要标注来源章节

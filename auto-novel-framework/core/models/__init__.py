@@ -7,8 +7,20 @@ from .character import (
     AbilityGain,
     OccupationChange,
     RelationshipSnapshot,
+    CombatPowerProgression,
 )
-from .plot import Plot, PlotThread, PlotStage, ChapterEvent, PlotTwist, KeyMilestone
+from .plot import (
+    Plot,
+    PlotThread,
+    PlotStage,
+    ChapterEvent,
+    PlotTwist,
+    KeyMilestone,
+    ForeshadowingItem,
+    AssetChange,
+    CombatPowerState,
+    CausalChain,
+)
 from .setting import (
     WorldSetting,
     PowerSystem,
@@ -18,6 +30,8 @@ from .setting import (
     Location,
     SpecialItem,
     RevealedAbility,
+    CheatSystem,
+    CheatStage,
 )
 from .relationship import (
     Relationships,
@@ -37,12 +51,17 @@ __all__ = [
     "AbilityGain",
     "OccupationChange",
     "RelationshipSnapshot",
+    "CombatPowerProgression",
     "Plot",
     "PlotThread",
     "PlotStage",
     "ChapterEvent",
     "PlotTwist",
     "KeyMilestone",
+    "ForeshadowingItem",
+    "AssetChange",
+    "CombatPowerState",
+    "CausalChain",
     "WorldSetting",
     "PowerSystem",
     "PowerStage",
@@ -51,6 +70,8 @@ __all__ = [
     "Location",
     "SpecialItem",
     "RevealedAbility",
+    "CheatSystem",
+    "CheatStage",
     "Relationships",
     "CharacterRelation",
     "FactionRelation",

@@ -28,6 +28,10 @@ def _raw_extractions_to_json(extractions: list[RawChapterExtraction]) -> str:
             "setting_revelations": ext.setting_revelations,
             "relationship_changes": ext.relationship_changes,
             "ability_gains": ext.ability_gains,
+            "foreshadowing": ext.foreshadowing,
+            "combat_power_changes": ext.combat_power_changes,
+            "asset_changes": ext.asset_changes,
+            "cheat_system_changes": ext.cheat_system_changes,
         }
         data.append(entry)
     return json.dumps(data, ensure_ascii=False, indent=2)
