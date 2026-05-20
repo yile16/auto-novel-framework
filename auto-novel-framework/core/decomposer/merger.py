@@ -91,7 +91,7 @@ class ArcMerger:
                 f"```json\n{extractions_json}\n```"
             )
 
-        result = self.llm.extract_yaml(self.system_prompt, user_message)
+        result = self.llm.extract_yaml(self.system_prompt, user_message, max_tokens=16384)
         logger.info(f"Arc merge complete: chapters {start_ch}-{end_ch}")
         return result
 

@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auto-Novel → Character IP — 小说到视频全流程平台</title>
+<style>
+:root {
+  --bg-deep: #07080c; --bg-surface: #0d0f16; --bg-card: #131622;
+  --bg-elevated: #1a1f2e; --bg-code: #101420;
+  --border: #222840; --border-glow: #3a3060;
+  --text-primary: #e4e0f2; --text-secondary: #9490a8; --text-muted: #5c586e;
+  --amber: #e8a838; --amber-dim: #c48e2e; --emerald: #34d399; --rose: #f06070;
+  --sky: #38bdf8; --violet: #a78bfa; --orange: #fb923c;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,.4); --shadow-md: 0 4px 24px rgba(0,0,0,.5);
+  --shadow-lg: 0 8px 48px rgba(0,0,0,.6);
+  --radius-sm: 6px; --radius-md: 10px; --radius-lg: 16px;
+}
+.light-theme {
+  --bg-deep: #f5f2ed; --bg-surface: #fafaf8; --bg-card: #ffffff;
+  --bg-elevated: #f0ede6; --bg-code: #f8f6f0;
+  --border: #ddd8ce; --border-glow: #c8b8a0;
+  --text-primary: #2d2416; --text-secondary: #5c5240;
+  --text-muted: #8a8070;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,.06); --shadow-md: 0 4px 24px rgba(0,0,0,.08);
+  --shadow-lg: 0 8px 48px rgba(0,0,0,.1);
+}
+.light-theme .bg-grid{
+  background-image:
+    linear-gradient(rgba(0,0,0,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,.03) 1px, transparent 1px);
+}
+.light-theme .bg-glow{
+  background:
+    radial-gradient(ellipse 50% 40% at 15% 10%, rgba(232,168,56,.08), transparent),
+    radial-gradient(ellipse 40% 50% at 85% 80%, rgba(56,189,248,.06), transparent);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: var(--bg-deep); color: var(--text-primary);
+  min-height: 100vh; overflow-x: hidden; line-height: 1.7;
+  transition: background .5s, color .5s;
+}
+.bg-grid{
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.012) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+.bg-glow{
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 50% 40% at 15% 10%, rgba(232,168,56,.04), transparent),
+    radial-gradient(ellipse 40% 50% at 85% 80%, rgba(56,189,248,.03), transparent),
+    radial-gradient(ellipse 30% 30% at 50% 60%, rgba(167,139,250,.02), transparent);
+}
+.app{position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:24px 20px 80px}
+
+.header{text-align:center;margin-bottom:32px;animation:fadeIn .6s ease-out}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+.header-badge{
+  display:inline-flex;align-items:center;gap:8px;padding:6px 16px;
+  border-radius:20px;background:rgba(232,168,56,.08);
+  border:1px solid rgba(232,168,56,.2);color:var(--amber);
+  font-size:.78rem;font-weight:500;margin-bottom:14px;letter-spacing:.05em;
+}
+.header h1{font-size:2.2rem;font-weight:900;letter-spacing:.02em;
+  background:linear-gradient(135deg,var(--text-primary) 30%,var(--amber) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:8px;
+}
+.header p{color:var(--text-muted);font-size:.9rem;font-weight:300;max-width:600px;margin:0 auto}
+
+.api-bar{
+  background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:12px 20px;margin-bottom:28px;display:flex;align-items:center;gap:10px;
+  flex-wrap:wrap;justify-content:center;box-shadow:var(--shadow-sm);
+}
+.api-bar label{color:var(--text-secondary);font-size:.78rem;white-space:nowrap}
+.api-bar input, .api-bar select{
+  padding:8px 12px;border-radius:var(--radius-sm);border:1px solid var(--border);
+  background:var(--bg-elevated);color:var(--text-primary);font-size:.8rem;
+  outline:none;transition:border-color .2s;min-width:140px;
+}
+.api-bar input:focus, .api-bar select:focus{border-color:var(--amber)}
+.preset-chip{
+  padding:5px 12px;border-radius:16px;border:1px solid var(--border);
+  background:var(--bg-elevated);color:var(--text-secondary);
+  font-size:.72rem;cursor:pointer;transition:all .2s;user-select:none;
+}
+.preset-chip:hover{border-color:var(--amber-dim);color:var(--text-primary)}
+.preset-chip.active{border-color:var(--amber);background:rgba(232,168,56,.08);color:var(--amber)}
+.btn-sm{
+  padding:7px 14px;border-radius:20px;border:1px solid var(--amber);background:rgba(232,168,56,.08);
+  color:var(--amber);cursor:pointer;font-size:.75rem;font-weight:500;
+  white-space:nowrap;transition:all .2s;
+}
+.btn-sm:hover{background:rgba(232,168,56,.16)}
+
+.card{
+  background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:24px 28px;margin-bottom:20px;box-shadow:var(--shadow-sm);
+}
+.card-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.card-header .icon{font-size:1.5rem}
+.card-header h2{font-size:1.1rem;font-weight:600}
+.card-header .badge{
+  padding:3px 10px;border-radius:12px;background:var(--bg-elevated);
+  color:var(--text-muted);font-size:.72rem;margin-left:auto;
+}
+
+.upload-zone{
+  border:2px dashed var(--border);border-radius:var(--radius-lg);
+  padding:44px 32px;text-align:center;cursor:pointer;
+  transition:all .3s;background:var(--bg-surface);
+}
+.upload-zone:hover{border-color:var(--amber);box-shadow:0 0 40px rgba(232,168,56,.06)}
+.upload-zone .upload-icon{font-size:2.8rem;color:var(--text-muted);margin-bottom:12px;transition:color .3s}
+.upload-zone:hover .upload-icon{color:var(--amber)}
+.upload-zone h3{font-size:1.15rem;font-weight:600;margin-bottom:6px}
+.upload-zone .hint{color:var(--text-muted);font-size:.85rem}
+.upload-zone .tags{display:flex;gap:8px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+.upload-zone .tag{
+  padding:3px 10px;border-radius:16px;background:var(--bg-elevated);
+  color:var(--text-muted);font-size:.75rem;border:1px solid var(--border);
+}
+#fileInput{display:none}
+
+.progress-section{display:none}
+.progress-section.show{display:block}
+.progress-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px 28px;box-shadow:var(--shadow-md)}
+.progress-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px}
+.progress-title{font-size:1rem;font-weight:600;display:flex;align-items:center;gap:8px}
+.typing-dots{display:inline-flex;gap:3px}
+.typing-dots span{width:5px;height:5px;border-radius:50%;background:var(--amber);animation:bounce 1.4s ease-in-out infinite}
+.typing-dots span:nth-child(2){animation-delay:.15s}
+.typing-dots span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+.bar-track{height:5px;border-radius:3px;background:var(--bg-elevated);overflow:hidden;margin-bottom:14px}
+.bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--amber),var(--violet));transition:width .5s;width:0%}
+
+.stage-panels{display:grid;grid-template-columns:repeat(auto-fill, minmax(130px, 1fr));gap:10px;margin-bottom:14px}
+.stage-panel{
+  background:var(--bg-surface);border:1px solid var(--border);
+  border-radius:var(--radius-md);padding:14px;text-align:center;transition:all .3s;
+}
+.stage-panel .sp-icon{width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.8rem;background:var(--bg-elevated);color:var(--text-muted);margin-bottom:6px}
+.stage-panel .sp-name{font-size:.82rem;color:var(--text-secondary);font-weight:600;display:block;margin-bottom:2px}
+.stage-panel .sp-status{font-size:.7rem;color:var(--text-muted)}
+.stage-panel.active{border-color:var(--amber);box-shadow:0 0 20px rgba(232,168,56,.06)}
+.stage-panel.active .sp-icon{background:rgba(232,168,56,.12);color:var(--amber);animation:pulse 1.5s infinite}
+.stage-panel.active .sp-name{color:var(--text-primary)}
+.stage-panel.done{border-color:var(--emerald)}
+.stage-panel.done .sp-icon{background:rgba(52,211,153,.12);color:var(--emerald)}
+.stage-panel.done .sp-name{color:var(--emerald)}
+.stage-panel.failed{border-color:var(--rose)}
+.stage-panel.failed .sp-icon{background:rgba(240,96,112,.12);color:var(--rose)}
+.stage-panel.failed .sp-name{color:var(--rose)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+.char-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));gap:12px;margin-top:12px}
+.char-card{
+  background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-md);
+  padding:16px;cursor:pointer;transition:all .2s;
+}
+.char-card:hover{border-color:var(--amber);transform:translateY(-2px);box-shadow:0 4px 16px rgba(232,168,56,.08)}
+.char-card .cc-name{font-weight:600;font-size:.95rem;margin-bottom:4px}
+.char-card .cc-role{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:500;margin-bottom:6px}
+.cc-role.主角{background:rgba(232,168,56,.15);color:var(--amber)}
+.cc-role.反派{background:rgba(240,96,112,.12);color:var(--rose)}
+.cc-role.配角{background:rgba(56,189,248,.1);color:var(--sky)}
+.char-card .cc-meta{font-size:.72rem;color:var(--text-muted)}
+.char-card.selected{border-color:var(--amber);box-shadow:0 0 24px rgba(232,168,56,.15);background:rgba(232,168,56,.04)}
+
+.btn{
+  padding:10px 24px;border-radius:50px;border:none;font-size:.9rem;
+  font-weight:600;cursor:pointer;transition:all .2s;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.btn-primary{
+  background:linear-gradient(135deg,var(--amber),var(--amber-dim));
+  color:var(--bg-deep);
+}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(232,168,56,.3)}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn-secondary{background:var(--bg-elevated);color:var(--text-secondary);border:1px solid var(--border)}
+.btn-secondary:hover{border-color:var(--amber);color:var(--amber)}
+.btn-danger{background:transparent;color:var(--rose);border:1px solid var(--rose)}
+.btn-danger:hover{background:var(--rose);color:#fff}
+.btn-row{display:flex;gap:10px;margin-top:16px;align-items:center;flex-wrap:wrap;justify-content:center}
+
+.results-section{display:none;margin-top:20px}
+.results-section.show{display:block;animation:fadeIn .3s}
+.tab-nav{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:0}
+.tab-btn{
+  padding:8px 16px;border-radius:var(--radius-sm) var(--radius-sm) 0 0;
+  border:1px solid var(--border);border-bottom:none;
+  background:var(--bg-surface);color:var(--text-secondary);
+  cursor:pointer;font-size:.82rem;transition:all .2s;
+}
+.tab-btn.active{background:var(--bg-card);color:var(--amber);border-color:var(--amber) var(--border) var(--bg-card)}
+.tab-panel{
+  display:none;background:var(--bg-card);border:1px solid var(--border);
+  border-radius:0 var(--radius-md) var(--radius-md) var(--radius-md);
+  padding:20px;max-height:70vh;overflow-y:auto;font-size:.92rem;line-height:1.85;
+}
+.tab-panel.active{display:block}
+.tab-panel pre{background:var(--bg-code);padding:16px;border-radius:var(--radius-sm);overflow-x:auto;font-size:.82rem;border:1px solid var(--border)}
+.tab-panel table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.85rem}
+.tab-panel td, .tab-panel th{padding:8px 12px;text-align:left;border-bottom:1px solid var(--border)}
+.tab-panel th{background:var(--bg-elevated);color:var(--amber);font-weight:600}
+.tab-panel td{color:var(--text-secondary)}
+.tab-panel h1,.tab-panel h2,.tab-panel h3{color:var(--text-primary);margin:18px 0 10px}
+.tab-panel h1{font-size:1.3rem;padding-bottom:10px;border-bottom:2px solid var(--border)}
+.tab-panel h2{font-size:1.1rem;border-left:3px solid var(--amber);padding-left:12px}
+.tab-panel h3{font-size:1rem;color:var(--amber)}
+.tab-panel strong{color:var(--text-primary)}
+.tab-panel blockquote{margin:14px 0;padding:10px 14px;border-left:3px solid var(--violet);background:rgba(167,139,250,.04);border-radius:0 var(--radius-sm) var(--radius-sm) 0;font-style:italic}
+.tab-panel code{padding:2px 6px;border-radius:4px;background:var(--bg-elevated);color:var(--emerald);font-size:.82rem}
+
+.timeline{position:relative;padding-left:30px}
+.timeline::before{
+  content:'';position:absolute;left:13px;top:0;bottom:0;width:2px;
+  background:linear-gradient(to bottom, var(--amber), var(--violet), var(--emerald));
+}
+.timeline-item{position:relative;margin-bottom:20px;padding:14px 16px;background:var(--bg-surface);border-radius:var(--radius-md);border:1px solid var(--border)}
+.timeline-item::before{
+  content:'';position:absolute;left:-23px;top:18px;width:10px;height:10px;
+  border-radius:50%;background:var(--amber);border:2px solid var(--bg-deep);
+}
+.timeline-item .ts-id{font-weight:700;color:var(--amber);font-size:.85rem}
+.timeline-item .ts-type{font-size:.75rem;color:var(--text-muted);margin-left:8px}
+.timeline-item .ts-desc{font-size:.85rem;color:var(--text-secondary);margin-top:6px;line-height:1.6}
+
+.download-bar{
+  display:none;align-items:center;gap:10px;flex-wrap:wrap;
+  padding:12px 20px;background:var(--bg-card);border:1px solid var(--emerald);
+  border-radius:var(--radius-md);margin-top:12px;
+}
+.download-bar.show{display:flex}
+.download-bar .dl-icon{color:var(--emerald);font-size:1.2rem}
+
+.toast-container{position:fixed;top:20px;right:20px;z-index:999}
+.toast{
+  padding:12px 20px;border-radius:var(--radius-md);color:#fff;font-size:.85rem;
+  margin-bottom:8px;animation:slideIn .3s ease-out;max-width:400px;
+}
+.toast.error{background:var(--rose)}
+.toast.success{background:var(--emerald)}
+.toast.info{background:var(--sky)}
+@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+
+.theme-toggle{
+  position:fixed;bottom:24px;right:24px;z-index:99;
+  width:44px;height:44px;border-radius:50%;border:1px solid var(--border);
+  background:var(--bg-card);color:var(--text-secondary);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:1.2rem;transition:all .3s;
+  box-shadow:var(--shadow-md);
+}
+.theme-toggle:hover{transform:scale(1.1);border-color:var(--amber);color:var(--amber)}
+
+@media(max-width:768px){
+  .header h1{font-size:1.6rem}
+  .stage-panels{grid-template-columns:repeat(3,1fr)}
+  .char-grid{grid-template-columns:repeat(2,1fr)}
+  .api-bar{flex-direction:column;align-items:stretch}
+  .api-bar input, .api-bar select{min-width:auto;flex:1}
+}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+<div class="app">
+  <div class="header">
+    <div class="header-badge">📖 AI-POWERED PIPELINE</div>
+    <h1>Auto-Novel → Character IP</h1>
+    <p>上传小说，自动拆解角色，生成角色歌曲、形象设计和视频分镜 — 全流程 AI 驱动</p>
+  </div>
+
+  <div class="api-bar" id="apiBar">
+    <label>🔑 API:</label>
+    <span class="preset-chip active" data-preset="groq" onclick="setPreset('groq')">Groq 免费</span>
+    <span class="preset-chip" data-preset="deepseek" onclick="setPreset('deepseek')">DeepSeek</span>
+    <span class="preset-chip" data-preset="custom" onclick="setPreset('custom')">自定义</span>
+    <input type="text" id="apiBaseUrl" value="https://api.groq.com/openai/v1" placeholder="Base URL">
+    <input type="text" id="apiKey" placeholder="API Key (console.groq.com 注册即免费)">
+    <select id="apiModel">
+      <option value="llama-3.1-8b-instant">Llama 3.1 8B (快)</option>
+      <option value="qwen-2.5-32b">Qwen 2.5 32B (强)</option>
+    </select>
+    <button class="btn-sm" onclick="testConnection()" id="btnTestConn" style="border-color:var(--emerald);color:var(--emerald)">🔌 测试连接</button>
+    <button class="btn-sm" onclick="saveApiConfig()">💾 保存</button>
+  </div>
+
+  <div class="card" id="uploadCard">
+    <div class="card-header">
+      <span class="icon">📤</span>
+      <h2>辅助工具：从小说提取角色</h2>
+      <span class="badge" style="background:var(--bg-elevated);color:var(--text-muted)">可选</span>
+    </div>
+    <p style="color:var(--text-muted);font-size:.8rem;margin-bottom:12px">上传小说自动拆解角色，拆完后可点选角色自动填充到下方管线。不拆解也可以直接手动输入角色。</p>
+    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+      <div class="upload-icon">📂</div>
+      <h3>拖拽小说文件到此处，或点击上传</h3>
+      <p class="hint">支持 .txt 格式，自动识别章节分割</p>
+      
+    </div>
+    <input type="file" id="fileInput" accept=".txt" onchange="handleFile(event)">
+    <div class="btn-row">
+      <button class="btn btn-primary" id="btnDecompose" disabled onclick="startDecompose()">⚡ 开始智能拆解</button>
+    </div>
+  </div>
+
+  <div class="card progress-section" id="decomposeProgress">
+    <div class="progress-card">
+      <div class="progress-head">
+        <div class="progress-title" id="decomposeTitle">
+          <span class="typing-dots"><span></span><span></span><span></span></span> 拆解进行中...
+        </div>
+        <div id="decomposeBadge" style="font-size:.85rem;color:var(--amber)"></div>
+      </div>
+      <div class="bar-track"><div class="bar-fill" id="decomposeBar"></div></div>
+      <p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:10px" id="decomposeMsg"></p>
+      <button class="btn btn-danger" id="btnCancelDecompose" style="display:none;padding:4px 14px;font-size:.72rem" onclick="cancelDecompose()">✕ 取消拆解</button>
+    </div>
+  </div>
+
+  <div class="card" id="characterSection">
+    <div class="card-header">
+      <span class="icon">🎬</span>
+      <h2>角色 IP 生成管线</h2>
+      <span class="badge" style="background:rgba(232,168,56,.12);color:var(--amber)">核心</span>
+    </div>
+    <div id="decomposeCharList" style="display:none;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border)">
+      <p style="font-size:.8rem;color:var(--text-secondary);margin-bottom:8px">拆解出的角色（点击可填充到下方）：</p>
+      <div class="char-grid" id="charGrid"></div>
+    </div>
+    <div class="input-row" style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+      <div style="flex:1;min-width:180px">
+        <label style="color:var(--text-secondary);font-size:.78rem;display:block;margin-bottom:4px">角色名 <span style="color:var(--rose)">*</span></label>
+        <div style="display:flex;gap:8px">
+        <input type="text" id="charName" placeholder="例如：孙悟空、林黛玉..." style="flex:1;padding:10px 14px;border-radius:6px;border:1px solid var(--border);background:var(--bg-elevated);color:var(--text-primary);font-size:.9rem;outline:none" oninput="onCharInput()" onblur="autoSuggestSearch()">
+        <button class="btn-sm" id="btnSearchChar" onclick="searchCharacterInfo()" style="white-space:nowrap;padding:8px 14px;font-size:.78rem">🔍 自动搜集</button>
+      </div>
+      </div>
+      <div style="flex:1;min-width:180px">
+        <label style="color:var(--text-secondary);font-size:.78rem;display:block;margin-bottom:4px">出处/作品</label>
+        <input type="text" id="charSource" placeholder="例如：西游记、红楼梦..." style="width:100%;padding:10px 14px;border-radius:6px;border:1px solid var(--border);background:var(--bg-elevated);color:var(--text-primary);font-size:.9rem;outline:none">
+      </div>
+    </div>
+    <div style="margin-bottom:14px">
+      <label style="color:var(--text-secondary);font-size:.78rem;display:block;margin-bottom:4px">角色描述 <span style="color:var(--text-muted);font-weight:300">（可选，帮助 AI 更好理解角色）</span></label>
+      <textarea id="charDesc" rows="3" placeholder="简述角色身份、性格、关键经历...&#10;例如：孙悟空是花果山灵石所化的石猴，大闹天宫后被压五行山下五百年，后随唐僧西天取经..." style="width:100%;padding:10px 14px;border-radius:6px;border:1px solid var(--border);background:var(--bg-elevated);color:var(--text-primary);font-size:.85rem;outline:none;resize:vertical;line-height:1.6"></textarea>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="btnRunIP" disabled onclick="startCharacterIP()">🎬 生成角色 IP</button>
+      <span id="ipHint" style="color:var(--text-muted);font-size:.78rem">请先输入角色名</span>
+    </div>
+  </div>
+
+  <div class="card progress-section" id="ipProgress">
+    <div class="progress-card">
+      <div class="progress-head">
+        <div class="progress-title" id="ipTitle">
+          <span class="typing-dots"><span></span><span></span><span></span></span> 角色 IP 管线执行中...
+        </div>
+        <div id="ipBadge" style="font-size:.85rem;color:var(--amber)"></div>
+      </div>
+      <div class="bar-track"><div class="bar-fill" id="ipBar"></div></div>
+      <div class="stage-panels" id="stagePanels"></div>
+      <p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:10px" id="ipMsg"></p>
+      <button class="btn btn-danger" id="btnCancelIP" style="display:none;padding:4px 14px;font-size:.72rem" onclick="cancelCharacterIP()">✕ 取消 IP 管线</button>
+    </div>
+  </div>
+
+  <div class="card results-section" id="resultsSection">
+    <div class="card-header"><span class="icon">📊</span><h2>产出物</h2><span class="badge" id="resultBadge" style="display:none"></span></div>
+    <div class="tab-nav" id="resultTabs"></div>
+    <div id="resultPanels"></div>
+    <div id="decomposeDownloadLinks" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)"></div>
+  </div>
+
+  <div class="download-bar" id="downloadBar">
+    <span class="dl-icon">✅</span>
+    <span style="color:var(--emerald);font-weight:600">全部完成！</span>
+    <span style="color:var(--text-secondary);font-size:.85rem" id="downloadMsg"></span>
+  </div>
+</div>
+
+<button class="theme-toggle" onclick="toggleTheme()" title="切换主题">🌓</button>
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+
+// ═══════════ API Configuration ═══════════
+
+const PRESETS = {
+  groq: { baseUrl: 'https://api.groq.com/openai/v1', model: 'llama-3.1-8b-instant' },
+  deepseek: { baseUrl: 'https://api.deepseek.com', model: 'deepseek-chat' },
+  custom: { baseUrl: '', model: '' }
+};
+
+let currentPreset = 'groq';
+
+function autoDetectPreset() {
+  const url = document.getElementById('apiBaseUrl').value.trim().toLowerCase();
+  if (url.includes('deepseek')) return 'deepseek';
+  if (url.includes('groq')) return 'groq';
+  if (url.includes('openai')) return 'custom';
+  return currentPreset;
+}
+
+function updateModelOptions(preset) {
+  const sel = document.getElementById('apiModel');
+  const currentVal = sel.value;
+  if (preset === 'groq') {
+    sel.innerHTML = '<option value="llama-3.1-8b-instant">Llama 3.1 8B (快)</option><option value="qwen-2.5-32b">Qwen 2.5 32B (强)</option><option value="deepseek-r1-distill-llama-70b">DeepSeek R1 70B</option>';
+  } else if (preset === 'deepseek') {
+    sel.innerHTML = '<option value="deepseek-chat">DeepSeek Chat</option><option value="deepseek-reasoner">DeepSeek Reasoner</option>';
+  }
+  // Try to restore previous value
+  for (let i = 0; i < sel.options.length; i++) {
+    if (sel.options[i].value === currentVal) { sel.value = currentVal; return; }
+  }
+  sel.value = sel.options[0].value;
+}
+
+function setPreset(name) {
+  currentPreset = name;
+  const p = PRESETS[name];
+  if (name !== 'custom') {
+    document.getElementById('apiBaseUrl').value = p.baseUrl;
+    document.getElementById('apiModel').value = p.model;
+  }
+  updateModelOptions(name);
+  document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('active'));
+  var chip = document.querySelector('[data-preset="'+name+'"]');
+  if (chip) chip.classList.add('active');
+}
+
+// Auto-detect preset when base URL changes
+document.addEventListener('DOMContentLoaded', function(){
+  document.getElementById('apiBaseUrl').addEventListener('input', function(){
+    var detected = autoDetectPreset();
+    setPreset(detected);
+  });
+});
+
+function saveApiConfig() {
+  const config = {
+    preset: currentPreset,
+    baseUrl: document.getElementById('apiBaseUrl').value.trim(),
+    apiKey: document.getElementById('apiKey').value.trim(),
+    model: document.getElementById('apiModel').value
+  };
+  localStorage.setItem('unified_api_config', JSON.stringify(config));
+  toast('配置已保存', 'success');
+}
+
+function loadApiConfig() {
+  const saved = localStorage.getItem('unified_api_config');
+  if (saved) {
+    try {
+      const c = JSON.parse(saved);
+      if (c.preset) setPreset(c.preset);
+      if (c.baseUrl) document.getElementById('apiBaseUrl').value = c.baseUrl;
+      if (c.apiKey) document.getElementById('apiKey').value = c.apiKey;
+      if (c.model) document.getElementById('apiModel').value = c.model;
+    } catch(e) {}
+  }
+}
+
+function getApiConfig() {
+  return {
+    api_key: document.getElementById('apiKey').value.trim(),
+    base_url: document.getElementById('apiBaseUrl').value.trim(),
+    model: document.getElementById('apiModel').value,
+  };
+}
+
+function testConnection() {
+  var cfg = getApiConfig();
+  if (!cfg.api_key) return toast('请先填写 API Key', 'error');
+  if (!cfg.base_url) return toast('请先填写 Base URL', 'error');
+
+  var btn = document.getElementById('btnTestConn');
+  btn.disabled = true;
+  btn.textContent = '测试中...';
+  toast('正在测试 API 连接...', 'info');
+
+  fetch(cfg.base_url + '/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + cfg.api_key
+    },
+    body: JSON.stringify({
+      model: cfg.model,
+      messages: [{role:'user', content:'回复"OK"'}],
+      max_tokens: 5
+    })
+  })
+  .then(function(r){
+    if (r.ok) { toast('API 连接成功！', 'success'); }
+    else if (r.status === 401) { toast('API Key 无效 (401)，请检查 Key 是否正确', 'error'); }
+    else if (r.status === 404) { toast('接口不存在 (404)，请检查 Base URL 和 Model 是否匹配', 'error'); }
+    else { toast('API 错误 (' + r.status + ')，请检查配置', 'error'); }
+    btn.disabled = false;
+    btn.textContent = '🔌 测试连接';
+  })
+  .catch(function(err){
+    toast('网络错误: ' + err.message + ' (可能是 Base URL 拼写错误或跨域限制)', 'error');
+    btn.disabled = false;
+    btn.textContent = '🔌 测试连接';
+  });
+}
+
+// ═══════════ Toast ═══════════
+
+function toast(msg, type) {
+  type = type || 'info';
+  var c = document.getElementById('toastContainer');
+  var el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.textContent = msg;
+  c.appendChild(el);
+  setTimeout(function(){ el.style.opacity='0'; el.style.transition='opacity .3s'; }, 3000);
+  setTimeout(function(){ el.remove(); }, 3500);
+}
+
+// ═══════════ Theme Toggle ═══════════
+
+function toggleTheme() {
+  document.body.classList.toggle('light-theme');
+  var isLight = document.body.classList.contains('light-theme');
+  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  document.querySelector('.theme-toggle').textContent = isLight ? '☀️' : '🌓';
+}
+
+(function initTheme() {
+  if (localStorage.getItem('theme') === 'light') {
+    document.body.classList.add('light-theme');
+    document.querySelector('.theme-toggle').textContent = '☀️';
+  }
+})();
+
+// ═══════════ File Upload ═══════════
+
+var uploadedText = '', uploadedTitle = '';
+
+function handleFile(e) {
+  var file = e.target.files[0];
+  if (!file) return;
+  var fd = new FormData();
+  fd.append('file', file);
+  toast('正在解析小说文件...', 'info');
+  fetch('/api/upload', { method: 'POST', body: fd })
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      if (data.ok) {
+        uploadedText = data.text;
+        uploadedTitle = data.title || file.name.replace('.txt','');
+        document.getElementById('btnDecompose').disabled = false;
+        document.getElementById('uploadZone').innerHTML =
+          '<div class="upload-icon">✅</div>' +
+          '<h3>' + (data.title || file.name) + '</h3>' +
+          '<p class="hint">' + data.text_length.toLocaleString() + ' 字符 · 准备就绪</p>' +
+          '<div class="tags"><span class="tag">📖 ' + (data.title||'未命名') + '</span>' +
+          '<span class="tag">✍️ ' + (data.author||'未知') + '</span>' +
+          '<span class="tag">📏 ' + (data.text_length/1000).toFixed(0) + 'K 字</span></div>';
+        toast('小说加载成功！', 'success');
+      } else {
+        toast('上传失败: ' + data.error, 'error');
+      }
+    })
+    .catch(function(err){ toast('网络错误: ' + err.message, 'error'); });
+}
+
+// Drag & drop
+(function(){
+  var uz = document.getElementById('uploadZone');
+  uz.addEventListener('dragover', function(e){ e.preventDefault(); uz.style.borderColor='var(--amber)'; });
+  uz.addEventListener('dragleave', function(){ uz.style.borderColor='var(--border)'; });
+  uz.addEventListener('drop', function(e){
+    e.preventDefault();
+    uz.style.borderColor = 'var(--border)';
+    var file = e.dataTransfer.files[0];
+    if (file) {
+      document.getElementById('fileInput').files = e.dataTransfer.files;
+      handleFile({ target: { files: [file] } });
+    }
+  });
+})();
+
+// ═══════════ Novel Decomposition ═══════════
+
+var decomposeTaskId = '', decomposeWS = null;
+
+function startDecompose() {
+  if (!uploadedText) return toast('请先上传小说', 'error');
+  var cfg = getApiConfig();
+  if (!cfg.api_key) return toast('请先填写 API Key（DeepSeek/OpenAI 兼容接口）', 'error');
+
+  var btn = document.getElementById('btnDecompose');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="typing-dots"><span></span><span></span><span></span></span> 拆解中...';
+  document.getElementById('decomposeProgress').classList.add('show');
+  document.getElementById('btnCancelDecompose').style.display = 'inline-block';
+  // character IP section stays visible
+  document.getElementById('resultsSection').classList.remove('show');
+
+  fetch('/api/decompose/start', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      text: uploadedText,
+      title: uploadedTitle,
+      api_key: cfg.api_key,
+      base_url: cfg.base_url,
+      model: cfg.model
+    })
+  })
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      if (!data.ok) {
+        var err = data.error || (data.detail ? JSON.stringify(data.detail) : '未知错误');
+        toast('启动失败: '+err, 'error');
+        btn.disabled=false; btn.innerHTML='⚡ 开始智能拆解'; return;
+      }
+      decomposeTaskId = data.task_id;
+      connectDecomposeWS(decomposeTaskId);
+    })
+    .catch(function(err){ toast('网络错误: '+err.message,'error'); btn.disabled=false; btn.innerHTML='⚡ 开始智能拆解'; });
+}
+
+function cancelDecompose() {
+  if (!decomposeTaskId) return;
+  fetch('/api/decompose/cancel/' + decomposeTaskId, { method: 'POST' })
+    .then(function(){ toast('已取消拆解任务', 'info'); })
+    .catch(function(){ toast('取消失败', 'error'); });
+}
+
+function connectDecomposeWS(taskId) {
+  var proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+  decomposeWS = new WebSocket(proto + '//' + location.host + '/ws/' + taskId);
+  decomposeWS.onmessage = function(event) {
+    var msg = JSON.parse(event.data);
+    if (msg.type === 'pong') return;
+    if (msg.progress !== undefined) {
+      document.getElementById('decomposeBar').style.width = msg.progress + '%';
+      document.getElementById('decomposeMsg').textContent = msg.message || '';
+    }
+    if (msg.type === 'completed') {
+      document.getElementById('decomposeBar').style.width = '100%';
+      document.getElementById('decomposeMsg').textContent = msg.message;
+      document.getElementById('decomposeTitle').innerHTML = '✅ 拆解完成';
+      document.getElementById('btnCancelDecompose').style.display = 'none';
+      if (msg.characters && msg.characters.length > 0) {
+        renderCharacterList(msg.characters);
+        // characterSection is always visible now
+      }
+      if (msg.report) showDecomposeResults(msg.report, taskId);
+      var btn = document.getElementById('btnDecompose');
+      btn.disabled = false; btn.innerHTML = '⚡ 重新拆解';
+    }
+    if (msg.type === 'error') {
+      document.getElementById('decomposeTitle').innerHTML = '❌ 拆解失败';
+      document.getElementById('decomposeMsg').textContent = msg.message || '';
+      document.getElementById('btnCancelDecompose').style.display = 'none';
+      var btn = document.getElementById('btnDecompose');
+      btn.disabled = false; btn.innerHTML = '⚡ 重试';
+    }
+    if (msg.type === 'cancelled') {
+      document.getElementById('decomposeTitle').innerHTML = '⏹ 已取消';
+      document.getElementById('btnCancelDecompose').style.display = 'none';
+      var btn = document.getElementById('btnDecompose');
+      btn.disabled = false; btn.innerHTML = '⚡ 重新拆解';
+    }
+  };
+  decomposeWS.onclose = function() {
+    // Only show reconnect if task isn't completed/failed yet
+    if (decomposeTaskId && document.getElementById('decomposeBar').style.width !== '100%') {
+      document.getElementById('decomposeMsg').textContent = 'WebSocket 连接断开，尝试重连...';
+      setTimeout(function(){ connectDecomposeWS(taskId); }, 2000);
+    }
+  };
+  decomposeWS.onerror = function(){ decomposeWS.close(); };
+}
+
+function renderCharacterList(chars) {
+  var list = document.getElementById('decomposeCharList');
+  var grid = document.getElementById('charGrid');
+  var html = '<span style="font-size:.78rem;color:var(--amber)">' + chars.length + ' 个角色</span> ';
+  for (var i = 0; i < chars.length; i++) {
+    var c = chars[i];
+    html += '<div class="char-card" data-index="' + i + '" onclick="selectCharacter(' + i + ')" style="display:inline-block;margin:4px">' +
+      '<div class="cc-name">' + c.name + '</div>' +
+      '<span class="cc-role ' + c.role + '">' + c.role + '</span>' +
+      '<div class="cc-meta">' + (c.personality ? c.personality.slice(0,30) : '暂无描述') + '</div></div>';
+  }
+  grid.innerHTML = html;
+  list.style.display = 'block';
+  window._decomposeChars = chars;
+}
+
+var selectedCharData = null;
+
+function selectCharacter(idx) {
+  document.querySelectorAll('.char-card').forEach(function(c){ c.classList.remove('selected'); });
+  var card = document.querySelector('.char-card[data-index="' + idx + '"]');
+  if (card) card.classList.add('selected');
+  var c = window._decomposeChars[idx];
+  selectedCharData = c;
+  // Fill manual input fields
+  document.getElementById('charName').value = c.name || '';
+  document.getElementById('charSource').value = '';
+  var desc = [];
+  if (c.personality) desc.push('性格：' + c.personality);
+  if (c.background) desc.push('背景：' + c.background);
+  if (c.appearance) desc.push('外貌：' + c.appearance);
+  document.getElementById('charDesc').value = desc.join('\n');
+  onCharInput();
+  toast('已填充角色「' + c.name + '」，可修改后直接运行', 'info');
+}
+
+function onCharInput() {
+  var name = document.getElementById('charName').value.trim();
+  var btn = document.getElementById('btnRunIP');
+  var hint = document.getElementById('ipHint');
+  if (name) {
+    btn.disabled = false;
+    btn.innerHTML = '🎬 为「' + name + '」生成 IP 内容';
+    hint.style.display = 'none';
+  } else {
+    btn.disabled = true;
+    btn.innerHTML = '🎬 生成角色 IP';
+    hint.style.display = 'inline';
+  }
+}
+
+// ═══════════ Character IP Pipeline ═══════════
+
+var ipTaskId = '', ipWS = null;
+
+var STAGE_NAMES = {
+  research: { label: '角色研究', icon: '🔍' },
+  angle: { label: '选题策划', icon: '💡' },
+  lyrics: { label: '歌词生成', icon: '🎤' },
+  voice: { label: '音色设计', icon: '🎵' },
+  song: { label: '歌曲制作', icon: '🎹' },
+  visual: { label: '形象设计', icon: '🎨' },
+  video: { label: '视频分镜', icon: '🎬' }
+};
+
+function initStagePanels() {
+  var c = document.getElementById('stagePanels');
+  var h = '';
+  for (var key in STAGE_NAMES) {
+    var s = STAGE_NAMES[key];
+    h += '<div class="stage-panel" id="sp-' + key + '"><div class="sp-icon">' + s.icon + '</div><span class="sp-name">' + s.label + '</span><span class="sp-status">等待中</span></div>';
+  }
+  c.innerHTML = h;
+}
+
+var searchingChar = false;
+
+function autoSuggestSearch() {
+  // Auto-trigger search when user leaves name field and description is empty
+  var desc = document.getElementById('charDesc').value.trim();
+  if (!desc) {
+    searchCharacterInfo();
+  }
+}
+
+function searchCharacterInfo() {
+  var name = document.getElementById('charName').value.trim();
+  if (!name || searchingChar) return;
+  var desc = document.getElementById('charDesc').value.trim();
+  if (desc) {
+    // Already has description, ask user
+    if (!confirm('角色描述已有内容，是否覆盖？')) return;
+  }
+  searchingChar = true;
+  var btn = document.getElementById('btnSearchChar');
+  btn.disabled = true;
+  btn.textContent = '⏳ 搜索中...';
+  toast('正在搜索「' + name + '」的资料...', 'info');
+
+  fetch('/api/character/search?name=' + encodeURIComponent(name))
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      searchingChar = false;
+      btn.disabled = false;
+      btn.textContent = '🔍 自动搜集';
+      if (data.ok && data.summary) {
+        document.getElementById('charDesc').value = data.summary;
+        toast('已搜集到「' + name + '」的资料，可编辑后运行', 'success');
+      } else {
+        toast('搜索失败: ' + (data.error || '无结果'), 'error');
+      }
+    })
+    .catch(function(err){
+      searchingChar = false;
+      btn.disabled = false;
+      btn.textContent = '🔍 自动搜集';
+      toast('搜索网络错误: ' + err.message, 'error');
+    });
+}
+
+function startCharacterIP() {
+  var charName = document.getElementById('charName').value.trim();
+  if (!charName) return toast('请先输入角色名', 'error');
+  var cfg = getApiConfig();
+  if (!cfg.api_key) return toast('请先填写 API Key', 'error');
+
+  var charSource = document.getElementById('charSource').value.trim();
+  var charDesc = document.getElementById('charDesc').value.trim();
+
+  // Build prefill profile from manual input + decomposition data
+  var prefill = {};
+  if (selectedCharData) {
+    prefill = JSON.parse(JSON.stringify(selectedCharData));
+  }
+  prefill.name = charName;
+  if (charSource) prefill.source = charSource;
+  if (charDesc) prefill.description = charDesc;
+
+  var body = JSON.stringify({
+    character_name: charName,
+    source: charSource || uploadedTitle,
+    style: 'auto',
+    api_key: cfg.api_key,
+    base_url: cfg.base_url,
+    model: cfg.model,
+    stages: 'research,angle,lyrics,voice,song,visual,video',
+    prefill_profile: JSON.stringify(prefill)
+  });
+
+  var btn = document.getElementById('btnRunIP');
+  btn.disabled = true; btn.innerHTML = '<span class="typing-dots"><span></span><span></span><span></span></span> 执行中...';
+  document.getElementById('ipProgress').classList.add('show');
+  document.getElementById('btnCancelIP').style.display = 'inline-block';
+  document.getElementById('resultsSection').classList.remove('show');
+  document.getElementById('downloadBar').classList.remove('show');
+  initStagePanels();
+
+  fetch('/api/character-ip/run', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: body
+  })
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      if (!data.ok) { toast('启动失败: '+(data.error||data.detail||'未知错误'),'error'); btn.disabled=false; btn.innerHTML='🎬 生成角色 IP'; return; }
+      ipTaskId = data.task_id;
+      connectIPWS(ipTaskId);
+    })
+    .catch(function(err){ toast('网络错误: '+err.message,'error'); btn.disabled=false; btn.innerHTML='🎬 生成角色 IP'; });
+}
+
+function cancelCharacterIP() {
+  if (!ipTaskId) return;
+  fetch('/api/decompose/cancel/' + ipTaskId, { method: 'POST' })
+    .then(function(){ toast('已取消 IP 管线任务', 'info'); })
+    .catch(function(){ toast('取消失败', 'error'); });
+}
+
+function connectIPWS(taskId) {
+  var proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+  ipWS = new WebSocket(proto + '//' + location.host + '/ws/' + taskId);
+  ipWS.onmessage = function(event) {
+    var msg = JSON.parse(event.data);
+    if (msg.type === 'pong') return;
+    if (msg.progress !== undefined) document.getElementById('ipBar').style.width = msg.progress + '%';
+    if (msg.message) document.getElementById('ipMsg').textContent = msg.message;
+
+    if (msg.stage) {
+      var panel = document.getElementById('sp-' + msg.stage);
+      if (panel) {
+        // Only remove 'active' from all panels, keep done/failed states
+        document.querySelectorAll('.stage-panel').forEach(function(p){ p.classList.remove('active'); });
+        if (msg.type === 'status') {
+          panel.classList.remove('done', 'failed');
+          panel.classList.add('active');
+          panel.querySelector('.sp-status').textContent = '执行中...';
+        } else if (msg.type === 'stage_complete') {
+          panel.classList.remove('active', 'failed');
+          panel.classList.add('done');
+          panel.querySelector('.sp-status').textContent = '✅ ' + ((msg.score||0)*100).toFixed(0) + '%';
+        } else if (msg.type === 'stage_error') {
+          panel.classList.remove('active', 'done');
+          panel.classList.add('failed');
+          panel.querySelector('.sp-status').textContent = '❌';
+        }
+      }
+    }
+
+    if (msg.type === 'completed') {
+      document.getElementById('ipBar').style.width = '100%';
+      document.getElementById('ipTitle').innerHTML = '🎉 角色 IP 内容生成完成';
+      document.getElementById('btnCancelIP').style.display = 'none';
+      var btn = document.getElementById('btnRunIP');
+      btn.disabled = false; btn.innerHTML = '🎬 重新生成';
+      if (msg.outputs) showIPResults(msg.outputs);
+      document.getElementById('downloadBar').classList.add('show');
+      document.getElementById('downloadMsg').textContent = '歌词、形象设计、分镜脚本均已生成，可导出到 Suno/ComfyUI 等工具';
+    }
+
+    if (msg.type === 'error') {
+      document.getElementById('ipTitle').innerHTML = '❌ 管线执行失败';
+      document.getElementById('ipMsg').textContent = msg.message || '';
+      document.getElementById('btnCancelIP').style.display = 'none';
+      var btn = document.getElementById('btnRunIP');
+      btn.disabled = false; btn.innerHTML = '🎬 重试';
+    }
+  };
+  ipWS.onclose = function() {
+    if (ipTaskId && document.getElementById('ipBar').style.width !== '100%') {
+      document.getElementById('ipMsg').textContent = 'WebSocket 连接断开，尝试重连...';
+      setTimeout(function(){ connectIPWS(taskId); }, 2000);
+    }
+  };
+  ipWS.onerror = function(){ ipWS.close(); };
+}
+
+// ═══════════ Results Display ═══════════
+
+function showDecomposeResults(report, taskId) {
+  var sec = document.getElementById('resultsSection');
+  sec.classList.add('show');
+  document.getElementById('resultTabs').innerHTML =
+    '<button class="tab-btn active" data-panel="panel-overview" onclick="switchTab(\'panel-overview\')">📊 概览</button>' +
+    '<button class="tab-btn" data-panel="panel-outline" onclick="switchTab(\'panel-outline\')">📋 章纲</button>' +
+    '<button class="tab-btn" data-panel="panel-chars" onclick="switchTab(\'panel-chars\')">👥 角色</button>' +
+    '<button class="tab-btn" data-panel="panel-world" onclick="switchTab(\'panel-world\')">🌍 世界观</button>';
+  document.getElementById('resultPanels').innerHTML =
+    '<div class="tab-panel active" id="panel-overview">' + simpleMD(report) + '</div>' +
+    '<div class="tab-panel" id="panel-outline"><p style="color:var(--text-muted);text-align:center;padding:30px">加载中...</p></div>' +
+    '<div class="tab-panel" id="panel-chars"><p style="color:var(--text-muted);text-align:center;padding:30px">加载中...</p></div>' +
+    '<div class="tab-panel" id="panel-world"><p style="color:var(--text-muted);text-align:center;padding:30px">加载中...</p></div>';
+  loadMD(taskId, 'outline.md', 'panel-outline');
+  loadMD(taskId, 'characters.md', 'panel-chars');
+  loadMD(taskId, 'world.md', 'panel-world');
+
+  // Add download links for all decompose outputs
+  var dlFiles = [
+    {name: '概览报告', file: 'index.md'},
+    {name: '章节纲要', file: 'outline.md'},
+    {name: '角色档案', file: 'characters.md'},
+    {name: '世界观', file: 'world.md'},
+    {name: '关系网络', file: 'relationships.md'},
+    {name: '剧情节拍', file: 'beats.md'},
+    {name: '节奏分析', file: 'rhythm.md'},
+    {name: '原始 JSON', file: 'decomposition.json'},
+  ];
+  var linksHtml = '<div style="display:flex;flex-wrap:wrap;gap:8px">';
+  dlFiles.forEach(function(f){
+    linksHtml += '<a href="/api/decompose/download/'+taskId+'/'+f.file+'" class="btn-sm" style="text-decoration:none;font-size:.72rem" download>📥 '+f.name+'</a>';
+  });
+  linksHtml += '</div>';
+  document.getElementById('decomposeDownloadLinks').innerHTML = linksHtml;
+  document.getElementById('decomposeDownloadLinks').style.display = 'block';
+}
+
+function loadMD(taskId, file, panelId) {
+  fetch('/api/decompose/download/' + taskId + '/' + file)
+    .then(function(r){ return r.text(); })
+    .then(function(t){ document.getElementById(panelId).innerHTML = simpleMD(t); })
+    .catch(function(){ document.getElementById(panelId).innerHTML = '<em>文件未生成</em>'; });
+}
+
+function showIPResults(outputs) {
+  var sec = document.getElementById('resultsSection');
+  sec.classList.add('show');
+  var tabs = '', panels = '', first = true;
+
+  function add(id, label, content) {
+    tabs += '<button class="tab-btn' + (first?' active':'') + '" data-panel="'+id+'" onclick="switchTab(\''+id+'\')">'+label+'</button>';
+    panels += '<div class="tab-panel' + (first?' active':'') + '" id="'+id+'">'+content+'</div>';
+    first = false;
+  }
+
+  if (outputs.research) add('ip-research', '🔍 角色研究', jsonToTable(outputs.research, '角色研究'));
+  if (outputs.angle) add('ip-angle', '💡 选题方案', jsonToTable(outputs.angle, '选题方案'));
+  if (outputs.lyrics_md) add('ip-lyrics', '🎤 歌词', simpleMD(outputs.lyrics_md));
+  else if (outputs.lyrics) add('ip-lyrics', '🎤 歌词', jsonToTable(outputs.lyrics, '歌词'));
+  if (outputs.voice) add('ip-voice', '🎵 音色', jsonToTable(outputs.voice, '音色设计'));
+  if (outputs.song) add('ip-song', '🎹 音乐', renderSong(outputs.song));
+  if (outputs.visual) add('ip-visual', '🎨 形象', renderVisual(outputs.visual));
+  if (outputs.video) add('ip-video', '🎬 分镜', renderStoryboard(outputs.video));
+
+  document.getElementById('resultTabs').innerHTML = tabs;
+  document.getElementById('resultPanels').innerHTML = panels;
+}
+
+// ═══════════ Renderers ═══════════
+
+function simpleMD(md) {
+  if (!md) return '<em>无内容</em>';
+  return md
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/^### (.+)$/gm,'<h3>$1</h3>')
+    .replace(/^## (.+)$/gm,'<h2>$1</h2>')
+    .replace(/^# (.+)$/gm,'<h1>$1</h1>')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/^> (.+)$/gm,'<blockquote>$1</blockquote>')
+    .replace(/^- (.+)$/gm,'<li>$1</li>')
+    .replace(/(<li>.*<\/li>\n?)+/g,'<ul>$&</ul>')
+    .replace(/\|(.+)\|/g,function(m){
+      var cells = m.split('|').filter(function(c){return c.trim();}).map(function(c){return '<td>'+c.trim()+'</td>';}).join('');
+      return '<tr>'+cells+'</tr>';
+    })
+    .replace(/(<tr>.*<\/tr>\n?)+/g,'<table>$&</table>')
+    .replace(/---+/g,'<hr>')
+    .replace(/\n\n/g,'<br><br>');
+}
+
+function jsonToTable(data, title) {
+  var h = '<h1>'+title+'</h1><table>';
+  for (var k in data) {
+    var v = data[k];
+    if (v === null || v === undefined || k[0]==='_') continue;
+    if (typeof v === 'object' && !Array.isArray(v)) continue;
+    var dv = Array.isArray(v) ? v.slice(0,10).map(function(x){ return typeof x==='object' ? JSON.stringify(x).slice(0,100) : String(x); }).join('<br>') : String(v).slice(0,500);
+    h += '<tr><th>'+k+'</th><td>'+dv+'</td></tr>';
+  }
+  return h + '</table>';
+}
+
+function renderSong(d) {
+  var h = '<h1>🎹 歌曲制作方案</h1>';
+  if (d.style) {
+    h += '<h2>音乐风格</h2><table>';
+    for (var k in d.style) { h += '<tr><th>'+k+'</th><td>'+ (Array.isArray(d.style[k]) ? d.style[k].join(', ') : String(d.style[k])) +'</td></tr>'; }
+    h += '</table>';
+  }
+  if (d.suno_prompt) h += '<h2>Suno Prompt</h2><pre>' + d.suno_prompt + '</pre>';
+  return h;
+}
+
+function renderVisual(d) {
+  var h = '<h1>🎨 角色形象设计 — ' + (d.character_name||'') + '</h1>';
+  h += '<p>选定风格: <strong>' + (d.selected_style||'未选择') + '</strong></p>';
+  if (d.style_options) {
+    d.style_options.forEach(function(s,i){
+      h += '<h2>方案 '+(i+1)+': '+s.style_name+'</h2><table>';
+      if (s.face_description) h += '<tr><th>面部</th><td>'+s.face_description+'</td></tr>';
+      if (s.costume) h += '<tr><th>服饰</th><td>'+s.costume+'</td></tr>';
+      if (s.color_scheme) h += '<tr><th>配色</th><td>'+s.color_scheme.join(', ')+'</td></tr>';
+      if (s.image_prompt) h += '<tr><th>生图 Prompt</th><td><code>'+s.image_prompt+'</code></td></tr>';
+      h += '</table>';
+    });
+  }
+  return h;
+}
+
+function renderStoryboard(d) {
+  var h = '<h1>🎬 分镜脚本 — ' + (d.song_title||'') + '</h1>';
+  h += '<p>总时长: <strong>' + (d.total_duration_sec||0) + 's</strong> | 总镜数: <strong>' + (d.shots?d.shots.length:0) + '</strong></p>';
+  if (d.visual_theme) h += '<p>视觉主题: <strong>' + d.visual_theme + '</strong></p>';
+  if (d.color_arc) h += '<p>色彩弧线: <strong>' + d.color_arc + '</strong></p>';
+  h += '<hr><div class="timeline">';
+  if (d.shots) {
+    d.shots.forEach(function(s){
+      h += '<div class="timeline-item"><span class="ts-id">#'+s.shot_id+'</span><span class="ts-type">'+s.shot_type+' · '+s.duration_sec+'s · '+(s.camera_movement||'静态')+'</span><div class="ts-desc">'+(s.visual_description||'')+'</div>';
+      if (s.lyrics_line) h += '<div style="font-size:.78rem;color:var(--amber);margin-top:4px">🎵 '+s.lyrics_line+'</div>';
+      if (s.image_generation_prompt) h += '<div style="font-size:.75rem;color:var(--text-muted);margin-top:4px">Prompt: '+s.image_generation_prompt.slice(0,150)+'...</div>';
+      h += '</div>';
+    });
+  }
+  return h + '</div>';
+}
+
+// ═══════════ Tab Switch ═══════════
+
+function switchTab(panelId) {
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+  var panel = document.getElementById(panelId);
+  if (panel) panel.classList.add('active');
+  var btn = document.querySelector('.tab-btn[data-panel="' + panelId + '"]');
+  if (btn) btn.classList.add('active');
+}
+
+// ═══════════ Init ═══════════
+
+loadApiConfig();
+initStagePanels();
+</script>
+</body>
+</html>

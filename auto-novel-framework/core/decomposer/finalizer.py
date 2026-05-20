@@ -65,7 +65,7 @@ class BookFinalizer:
         )
 
         logger.info("Finalizing book decomposition from %d arc states", len(arc_states))
-        result = self.llm.extract_yaml(self.system_prompt, user_message)
+        result = self.llm.extract_yaml(self.system_prompt, user_message, max_tokens=64000)
 
         # Add metadata
         result["title"] = title

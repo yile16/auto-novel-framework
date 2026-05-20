@@ -25,13 +25,35 @@ class PlotThread(BaseModel):
     stages: list[PlotStage] = Field(default_factory=list)
 
 
+class StoryBeat(BaseModel):
+    """Narrative beat — the atomic unit of storytelling.
+
+    One causal action + one emotional turn = one beat.
+    A chapter typically has 3-8 beats.
+    """
+    chapter: int
+    beat_index: int = 0
+    beat_type: str = ""  # 铺垫/冲突/反转/释放/过渡
+    emotional_arc: str = ""  # "起始情绪 → 结束情绪"
+    narrative_function: str = ""  # 推进主线/塑造人物/揭示设定/制造悬念/调节节奏
+    intensity: int = 1  # 1-5
+    location: str = ""
+    characters_present: list[str] = Field(default_factory=list)
+    summary: str = ""
+    cause: str = ""
+    consequence: str = ""
+    key_moments: list[str] = Field(default_factory=list)
+    info_released: str = ""
+    dialogue_signposts: list[str] = Field(default_factory=list)
+
+
 class ChapterEvent(BaseModel):
     """Per-chapter event — the basis for chapter-by-chapter novel reconstruction."""
     chapter: int
     title: str = ""
     timeline_point: str = ""
     location: str = ""
-    characters: list[str] = Field(default_factory=list)
+    characters: list[str] = Field(default_factory=list)  # alias: characters_involved
     summary: str = ""
     cause: str = ""
     consequence: str = ""
@@ -89,6 +111,7 @@ class CausalChain(BaseModel):
 
 
 class Plot(BaseModel):
+    beats: list[StoryBeat] = Field(default_factory=list)  # 叙事节拍（核心）
     threads: list[PlotThread] = Field(default_factory=list)
     chapter_events: list[ChapterEvent] = Field(default_factory=list)
     twists: list[PlotTwist] = Field(default_factory=list)

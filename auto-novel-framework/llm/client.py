@@ -98,6 +98,38 @@ class LLMClient:
             text = "\n".join(lines)
         return json.loads(text)
 
+    def _repair_yaml(self, text: str) -> str:
+        """Attempt to repair common YAML formatting issues from LLM output."""
+        import re
+        lines = text.split("\n")
+        repaired = []
+        for line in lines:
+            # If line has unbalanced quotes, try to fix by closing them
+            dq_count = line.count('"')
+            sq_count = line.count("'")
+            stripped = line.lstrip()
+            # Fix unclosed double quotes in key: "value pattern
+            if dq_count % 2 != 0 and ':"' in line:
+                # Find the last unclosed double quote and close it
+                line = line.rstrip() + '"'
+            # Fix unclosed single quotes
+            if sq_count % 2 != 0 and ":'" in line:
+                line = line.rstrip() + "'"
+            # Fix flow mappings with problematic characters
+            if ":" in line and not stripped.startswith("#") and not stripped.startswith("- "):
+                indent = line[:len(line) - len(stripped)]
+                match = re.match(r'^([^:]+):\s*(.*)', stripped)
+                if match:
+                    key = match.group(1)
+                    value = match.group(2)
+                    if value and not value.startswith('"') and not value.startswith("'"):
+                        if any(c in value for c in ('{', '}', '[', ']', '#', '&', '*', '!', '|', '>')):
+                            value = f'"{value}"'
+                    repaired.append(f"{indent}{key}: {value}")
+                    continue
+            repaired.append(line)
+        return "\n".join(repaired)
+
     def extract_yaml(self, system_prompt: str, user_message: str, **kwargs: Any) -> dict:
         """Extract structured YAML from a chat response, returns parsed dict."""
         full_system = (
@@ -113,4 +145,37 @@ class LLMClient:
             if lines and lines[-1].strip() == "```":
                 lines = lines[:-1]
             text = "\n".join(lines)
-        return yaml.safe_load(text)
+        try:
+            return yaml.safe_load(text)
+        except yaml.YAMLError:
+            try:
+                repaired = self._repair_yaml(text)
+                return yaml.safe_load(repaired)
+            except yaml.YAMLError:
+                # Last resort: retry with a fix-it prompt
+                fix_prompt = (
+                    "The following YAML has syntax errors. Fix ONLY the YAML syntax "
+                    "(unclosed quotes, bad indentation, etc.) without changing any content. "
+                    "Output ONLY the corrected YAML, no commentary:\n\n" + text
+                )
+                try:
+                    fixed = self.chat(
+                        "You are a YAML syntax validator. Fix the YAML syntax errors.",
+                        fix_prompt,
+                        max_tokens=self.config.max_tokens,
+                        temperature=0,
+                    )
+                    fixed = fixed.strip()
+                    if fixed.startswith("```"):
+                        flines = fixed.split("\n")
+                        if flines[0].startswith("```"):
+                            flines = flines[1:]
+                        if flines and flines[-1].strip() == "```":
+                            flines = flines[:-1]
+                        fixed = "\n".join(flines)
+                    return yaml.safe_load(fixed)
+                except Exception:
+                    raise RuntimeError(
+                        f"Failed to parse YAML from LLM response after repair attempts. "
+                        f"Raw output (first 500 chars): {text[:500]}"
+                    )

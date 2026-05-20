@@ -21,9 +21,8 @@ from config import Config, DecomposeConfig
 from utils.text import split_by_chapter
 from utils.io import read_novel
 from core.decomposer.extractor import ChapterExtractor
-from core.decomposer.merger import ArcMerger
-from core.decomposer.finalizer import BookFinalizer
-from utils.markdown_writer import decomposition_to_markdown
+from core.decomposer.programmatic_merger import ProgrammaticMerger
+from utils.markdown_writer_v3 import write_all
 
 logger = logging.getLogger(__name__)
 
@@ -130,95 +129,64 @@ async def run_decompose(
             total_chunks = len(chunks)
             _notify(task_id, {"type": "status", "message": f"共 {total_chunks} 个分块", "progress": 15})
 
-            # Extract in batches with context relay
+            # Full concurrency extraction
             extractor = ChapterExtractor(config.decompose)
-            merger = ArcMerger(config.decompose)
-            finalizer = BookFinalizer(config.decompose)
+            merger = ProgrammaticMerger()
 
-            arc_size = config.decompose.chapters_per_arc
-            chunk_batches = [chunks[i : i + arc_size] for i in range(0, len(chunks), arc_size)]
+            total_chunks = len(chunks)
 
-            all_extractions = []
-            previous_context = ""
-
-            for batch_idx, batch_chunks in enumerate(chunk_batches):
+            def progress_cb(done, _total):
                 if task["cancel"]:
-                    task["status"] = "stopped"
-                    _notify(task_id, {"type": "stopped"})
                     return
-
-                while task["pause"]:
-                    task["status"] = "paused"
-                    _notify(task_id, {"type": "paused"})
-                    time.sleep(1)
-                    if task["cancel"]:
-                        return
-
+                pct = 15 + int(done / _total * 60)
                 task["status"] = "extracting"
-                pct = 15 + int((batch_idx + 1) / len(chunk_batches) * 40)
                 _notify(task_id, {
                     "type": "status",
-                    "message": f"提取 {batch_idx + 1}/{len(chunk_batches)} 批次 ({batch_chunks[0].chapter_start}-{batch_chunks[-1].chapter_start}章)...",
+                    "message": f"提取 {done}/{_total} 章...",
                     "progress": pct,
-                    "chunk_current": batch_idx + 1,
-                    "chunk_total": len(chunk_batches),
+                    "chunk_current": done,
+                    "chunk_total": _total,
                 })
 
-                extractions = extractor.extract_batch(batch_chunks, previous_context=previous_context)
-                all_extractions.extend(extractions)
-                previous_context = extractor.build_context_summary(extractions)
+            _notify(task_id, {"type": "status", "message": f"全并发提取 {total_chunks} 章...", "progress": 15})
+
+            extractions = extractor.extract_all(
+                chunks,
+                max_workers=config.decompose.max_concurrent_extractions,
+                progress_callback=progress_cb,
+            )
+
+            if task["cancel"]:
+                task["status"] = "stopped"
+                _notify(task_id, {"type": "stopped"})
+                return
 
             # Save raw extractions
             raw_path = output_dir / "raw_extractions.json"
             raw_path.write_text(
                 json.dumps(
-                    [e.model_dump(exclude_none=True) for e in all_extractions],
+                    [e.model_dump(exclude_none=True) for e in extractions],
                     ensure_ascii=False, indent=2,
                 ),
                 encoding="utf-8",
             )
 
-            # Merge into arcs
-            if task["cancel"]:
-                return
-
+            # Programmatic merge
             task["status"] = "merging"
-            _notify(task_id, {"type": "status", "message": "合并弧段状态...", "progress": 60})
+            _notify(task_id, {"type": "status", "message": "程序化合并...", "progress": 80})
 
-            batch_extractions = [
-                all_extractions[i : i + arc_size] for i in range(0, len(all_extractions), arc_size)
-            ]
-            arc_states = merger.merge_all_arcs_sequentially(batch_extractions)
-
-            arc_path = output_dir / "arc_states.json"
-            arc_path.write_text(json.dumps(arc_states, ensure_ascii=False, indent=2), encoding="utf-8")
-
-            # Finalize
-            if task["cancel"]:
-                return
-
-            task["status"] = "finalizing"
-            _notify(task_id, {"type": "status", "message": "生成全书拆解文档...", "progress": 80})
-
-            result = finalizer.finalize(
-                arc_states,
-                title=title,
-                total_chapters=len(all_extractions),
-            )
+            raw_data = json.loads(raw_path.read_text(encoding="utf-8"))
+            result = merger.merge(raw_data, title=title, author="")
 
             # Save outputs
             data = result.model_dump(exclude_none=True)
-            yaml_path = output_dir / "decomposition.yaml"
-            yaml_path.write_text(
-                __import__("yaml").dump(data, allow_unicode=True, sort_keys=False, width=200),
-                encoding="utf-8",
-            )
             json_path = output_dir / "decomposition.json"
             json_path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
-            md_path = decomposition_to_markdown(json_path, output_dir / "decomposition.md")
 
-            # Read back results for frontend
-            report = md_path.read_text(encoding="utf-8")
+            md_paths = write_all(result, output_dir, raw_extractions=raw_data)
+
+            # Read index.md as the main report for frontend
+            report = (output_dir / "index.md").read_text(encoding="utf-8")
 
             task["status"] = "completed"
             task["progress"] = 100
@@ -227,7 +195,7 @@ async def run_decompose(
 
             _notify(task_id, {
                 "type": "completed",
-                "message": "拆解完成！",
+                "message": f"拆解完成！生成 {len(md_paths)} 个专题文件",
                 "progress": 100,
                 "report": report,
             })
